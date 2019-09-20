@@ -15,6 +15,7 @@ public class Main {
 
 	public static String selfTrainingVersionOne = "ST_VERSION_01";
 	public static String selfTrainingVersionTwo = "ST_VERSION_02";
+	public static String selfTrainingStandard = "ST_VERSION_STANDARD";
 	
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
@@ -29,8 +30,9 @@ public class Main {
 		
 		for (Dataset d : datasets) {
 			
-			run(d, selfTrainingVersionOne);
-			run(d, selfTrainingVersionTwo);
+			//run(d, selfTrainingVersionOne);
+			//run(d, selfTrainingVersionTwo);
+			run(d, selfTrainingStandard);
 			
 		}
 	}
@@ -100,6 +102,9 @@ public class Main {
 			}
 			else if(selfTrainingVersion.equals(selfTrainingVersionTwo)) {
 				stm.runVersionTwo();
+			}
+			else if(selfTrainingVersion.equals(selfTrainingStandard)) {
+				stm.runStandard();
 			}
 			
 			str.addFoldResult(stm.getResult());

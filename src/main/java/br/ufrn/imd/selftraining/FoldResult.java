@@ -8,7 +8,6 @@ public class FoldResult {
 	private double precision;
 	private double recall;
 	
-
 	public double getAccuracy() {
 		return accuracy;
 	}

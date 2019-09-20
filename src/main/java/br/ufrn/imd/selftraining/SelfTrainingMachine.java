@@ -71,7 +71,7 @@ public class SelfTrainingMachine {
 			joinClassifiedWithLabeledSet();
 			clearTempSet();
 			i++;
-			//printIterationInfo();
+			printIterationInfo();
 		}
 		mainClassifierJob();
 	}
@@ -92,6 +92,28 @@ public class SelfTrainingMachine {
 			i++;
 			printIterationInfo();
 			addIterationInfoToHistory();
+		}
+		mainClassifierJob();
+	}
+	
+	public void runStandard() throws Exception {
+		
+		int i = 1;
+		while (true) {
+			generateIterationInfo(i);
+			addIterationInfoToHistory();
+			
+			trainMainCLassifierOverLabeledSet();
+			classifyInstancesStandard(this.unlabeledSet);
+
+			if (tempSet.getInstances().size() == 0) {
+				break;
+			}
+			
+			joinClassifiedWithLabeledSet();
+			clearTempSet();
+			i++;
+			printIterationInfo();
 		}
 		mainClassifierJob();
 	}
@@ -168,6 +190,45 @@ public class SelfTrainingMachine {
 		sb.append("\n");
 		addToHistory(sb.toString());
 	}
+	
+	private void classifyInstancesStandard(Dataset dataset) throws Exception {
+		
+		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
+		Double bestConfidence = 0.0;
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
+		
+		InstanceResultStandard instanceResultStandard;
+		
+		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
+		while(iterator.hasNext()) {
+			Instance instance = iterator.next();
+			instanceResultStandard = new InstanceResultStandard(instance);
+			instanceResultStandard.addConfidences(this.mainClassifier.distributionForInstance(instance));
+			standardResults.add(instanceResultStandard);
+			
+			if(instanceResultStandard.getBestConfidence() > bestConfidence) {
+				bestConfidence = instanceResultStandard.getBestConfidence();
+			}
+
+			sb.append(instanceResultStandard.outputDataToCsv() + "\n");
+		}
+		
+		for(InstanceResultStandard irs: standardResults) {
+			if(irs.getBestConfidence() >= bestConfidence) {
+				DenseInstance d = (DenseInstance) irs.getInstance().copy();
+				d.setClassValue(irs.getBestClass());
+				tempSet.addInstance(d); //CAUTION
+				unlabeledSet.getInstances().remove(irs.getInstance());
+			}
+		}
+		
+		this.goodClassifiedInstances = tempSet.getInstances().size();
+		sb.append("\n");
+		addToHistory(sb.toString());
+	}
+	
 	private void clearTempSet() {
 		this.tempSet.getInstances().clear();
 	}
@@ -307,7 +368,7 @@ public class SelfTrainingMachine {
 	}
 	
 	private void mainClassifierJob() throws Exception{
-		this.mainClassifier.buildClassifier(labeledSet.getInstances());
+		//this.mainClassifier.buildClassifier(labeledSet.getInstances());
 		Measures measures = new Measures(this.mainClassifier, this.labeledSet.getInstances(), this.validationSet.getInstances());
 		
 		result.setAccuracy(measures.getAccuracy());

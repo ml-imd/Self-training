@@ -2,6 +2,8 @@ package br.ufrn.imd.selftraining;
 
 import java.util.ArrayList;
 
+import br.ufrn.imd.selftraining.utils.DateUtils;
+
 public class SelfTrainingResult {
 
 	private int numFolds;
@@ -165,6 +167,11 @@ public class SelfTrainingResult {
 	private String buildTime() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("------------------------------------------------------------------------------------------------");
+		sb.append("\n");
+		sb.append("BEGIN: \t" + DateUtils.fromLongToDateAsString(this.begin));
+		sb.append("\n");
+		sb.append("END: \t" + DateUtils.fromLongToDateAsString(this.end));
+		sb.append("\n");
 		sb.append("\n");
 		sb.append("TIME ELAPSED:\t" + getTimeElapsed());
 		sb.append("\n");

@@ -1,10 +1,11 @@
 package br.ufrn.imd.selftraining;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import weka.core.Instance;
 
-public class InstanceResultStandard {
+public class InstanceResultStandard implements Comparable<InstanceResultStandard>{
 
 	private Instance instance;
 	private ArrayList<Double> confidences;
@@ -78,5 +79,26 @@ public class InstanceResultStandard {
 
 		return sb.toString();
 	}
+	
+	public int compareTo(InstanceResultStandard irs) {
+		return (int) (this.bestConfidence - irs.getBestConfidence());
+	}
 
+	public static Comparator<InstanceResultStandard> bestConfidenceComparatorAsc = new Comparator<InstanceResultStandard>() {
+
+		public int compare(InstanceResultStandard irs1, InstanceResultStandard irs2) {
+			double x = irs1.getBestConfidence() - irs2.getBestConfidence();
+			x = x * 100000;
+			return (int)x;
+		}
+	};
+
+	public static Comparator<InstanceResultStandard> bestConfidenceComparatorDesc = new Comparator<InstanceResultStandard>() {
+
+		public int compare(InstanceResultStandard irs1, InstanceResultStandard irs2) {
+			double x = irs1.getBestConfidence() - irs2.getBestConfidence();
+			x = x * 100000;
+			return (int)-x;
+		}
+	};
 }

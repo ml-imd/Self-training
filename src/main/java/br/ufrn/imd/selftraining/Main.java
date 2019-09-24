@@ -16,6 +16,7 @@ public class Main {
 	public static String selfTrainingVersionOne = "ST_VERSION_01";
 	public static String selfTrainingVersionTwo = "ST_VERSION_02";
 	public static String selfTrainingStandard = "ST_VERSION_STANDARD";
+	public static String selfTrainingStandard2 = "ST_VERSION_STANDARD_2";
 	
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
@@ -32,8 +33,8 @@ public class Main {
 			
 			//run(d, selfTrainingVersionOne);
 			//run(d, selfTrainingVersionTwo);
-			run(d, selfTrainingStandard);
-			
+			//run(d, selfTrainingStandard);
+			run(d, selfTrainingStandard2);
 		}
 	}
 
@@ -41,27 +42,27 @@ public class Main {
 		String basePath = new String("src/main/resources/datasets/");
 		
 		ArrayList<String> sources = new ArrayList<String>();
-		//sources.add("Abalone.arff");
-		//sources.add("Adult.arff");
-		//sources.add("Arrhythmia.arff");
+		sources.add("Abalone.arff");
+		sources.add("Adult.arff");
+		sources.add("Arrhythmia.arff");
 		sources.add("Automobile.arff");
-		//sources.add("Car.arff");
-		//sources.add("Dermatology.arff");
-		//sources.add("Ecoli.arff");
-		//sources.add("Flags.arff");
-		//sources.add("GermanCredit.arff");
-		//sources.add("GlassIdentification.arff");
-		//sources.add("ImageSegmentation.arff");
-		//sources.add("KR-vs-KP.arff");
-		//sources.add("Madelon.arff");
-		//sources.add("Nursery.arff");
-		//sources.add("Secom.arff");
-		//sources.add("Semeion.arff");
-		//sources.add("SolarFlare1.arff");
-		//sources.add("Sonar.arff");
-		//sources.add("Waveform.arff");
-		//sources.add("Wine.arff");
-		//sources.add("Yeast.arff");
+		sources.add("Car.arff");
+		sources.add("Dermatology.arff");
+		sources.add("Ecoli.arff");
+		sources.add("Flags.arff");
+		sources.add("GermanCredit.arff");
+		sources.add("GlassIdentification.arff");
+		sources.add("ImageSegmentation.arff");
+		sources.add("KR-vs-KP.arff");
+		sources.add("Madelon.arff");
+		sources.add("Nursery.arff");
+		sources.add("Secom.arff");
+		sources.add("Semeion.arff");
+		sources.add("SolarFlare1.arff");
+		sources.add("Sonar.arff");
+		sources.add("Waveform.arff");
+		sources.add("Wine.arff");
+		sources.add("Yeast.arff");
 		
 		for(String s: sources) {
 			Dataset d;
@@ -84,7 +85,7 @@ public class Main {
 		dataset.shuffleInstances(seed);
 		folds = Dataset.splitDataset(dataset, numFolds);
 		Dataset validation = new Dataset();
-		
+		str.setBegin(System.currentTimeMillis());
 		for (int i = 0; i < numFolds; i++) {
 			
 			validation = new Dataset(folds.get(i));
@@ -106,7 +107,11 @@ public class Main {
 			else if(selfTrainingVersion.equals(selfTrainingStandard)) {
 				stm.runStandard();
 			}
+			else if(selfTrainingVersion.equals(selfTrainingStandard2)) {
+				stm.runStandard2();
+			}
 			
+			str.setEnd(System.currentTimeMillis());
 			str.addFoldResult(stm.getResult());
 			
 			sow.logDetailsAboutStep(dataset.getDatasetName(), i);

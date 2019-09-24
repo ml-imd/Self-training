@@ -9,6 +9,8 @@ public class SelfTrainingResult {
 	private String selfTrainingVersion;
 	private ArrayList<FoldResult> results;
 	private FoldResult averageResult;
+	private long begin;
+	private long end;
 
 	public SelfTrainingResult(int numFolds, String datasetName, String selfTrainingVersion) {
 		this.numFolds = numFolds;
@@ -56,6 +58,10 @@ public class SelfTrainingResult {
 		averageResult.setRecall(recall / num);
 	}
 	
+	public long getTimeElapsed() {
+		return this.end - this.begin;
+	}
+	
 	public int getNumFolds() {
 		return numFolds;
 	}
@@ -95,6 +101,22 @@ public class SelfTrainingResult {
 	public void setAverageResult(FoldResult averageResult) {
 		this.averageResult = averageResult;
 	}
+	
+	public long getBegin() {
+		return begin;
+	}
+
+	public void setBegin(long begin) {
+		this.begin = begin;
+	}
+
+	public long getEnd() {
+		return end;
+	}
+
+	public void setEnd(long end) {
+		this.end = end;
+	}
 
 	@Override
 	public String toString() {
@@ -110,7 +132,7 @@ public class SelfTrainingResult {
 		return buildResultString();
 	}
 	
-	private String buildResultString() {
+	private String buildMetrics() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("------------------------------------------------------------------------------------------------");
 		sb.append("\n");
@@ -136,7 +158,44 @@ public class SelfTrainingResult {
 		sb.append("AVERAG" + "\t\t");
 		sb.append(averageResult.onlyValuesToString() +"\n");
 		sb.append("------------------------------------------------------------------------------------------------");
-		sb.append("\n\n\n");
+		sb.append("\n");
+		return sb.toString();
+	}
+	
+	private String buildTime() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("------------------------------------------------------------------------------------------------");
+		sb.append("\n");
+		sb.append("TIME ELAPSED:\t" + getTimeElapsed());
+		sb.append("\n");
+		sb.append("------------------------------------------------------------------------------------------------");
+		sb.append("\n");
+		return sb.toString(); 
+	}
+	
+	private String buildlabeledHistory() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("------------------------------------------------------------------------------------------------");
+		sb.append("\n");
+		sb.append("Labeled increment by iteration:");
+		sb.append("\n");
+		sb.append("------------------------------------------------------------------------------------------------");
+		sb.append("\n");
+		for(int i = 1; i <= results.size(); i++) {
+			sb.append("[FOLD" + i + "]:\t");
+			for(IterationInfo it: results.get(i-1).getIterationInfo()) {
+				sb.append(it.getAddedTolabeled() + "\t");
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
+	private String buildResultString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(buildMetrics());
+		sb.append(buildTime());
+		sb.append(buildlabeledHistory());
 		return sb.toString();
 	}
 	

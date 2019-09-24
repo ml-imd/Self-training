@@ -1,6 +1,7 @@
 package br.ufrn.imd.selftraining;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import weka.classifiers.Classifier;
@@ -23,7 +24,10 @@ public class SelfTrainingMachine {
 	private int labeledSetPercentual = 10;
 	private Dataset labeledSet;
 	private Dataset unlabeledSet;
-
+	
+	private int unlabeledSetJoinRate = 10;
+	private int amountToJoin = 0;
+	
 	private ArrayList<Classifier> pool;
 	private Classifier mainClassifier;
 
@@ -69,6 +73,7 @@ public class SelfTrainingMachine {
 			
 			classifyBestWithMainClassifier();
 			joinClassifiedWithLabeledSet();
+			result.addIterationInfo(this.goodClassifiedInstances);
 			clearTempSet();
 			i++;
 			printIterationInfo();
@@ -80,7 +85,7 @@ public class SelfTrainingMachine {
 		int i = 1;
 		while (true) {
 			generateIterationInfo(i);
-			
+			trainMainCLassifierOverLabeledSet();
 			trainClassifiersPool();
 			classifyInstancesCheckAgreementPool(this.unlabeledSet);
 
@@ -88,6 +93,7 @@ public class SelfTrainingMachine {
 				break;
 			}
 			joinClassifiedWithLabeledSet();
+			result.addIterationInfo(this.goodClassifiedInstances);
 			clearTempSet();
 			i++;
 			printIterationInfo();
@@ -96,6 +102,7 @@ public class SelfTrainingMachine {
 		mainClassifierJob();
 	}
 	
+	//Join only the n best instances according to confidence
 	public void runStandard() throws Exception {
 		
 		int i = 1;
@@ -111,12 +118,42 @@ public class SelfTrainingMachine {
 			}
 			
 			joinClassifiedWithLabeledSet();
+			result.addIterationInfo(this.goodClassifiedInstances);
+			
 			clearTempSet();
 			i++;
 			printIterationInfo();
 		}
 		mainClassifierJob();
 	}
+	
+	//Join the p percent best instances according to confidence at each iteration
+	public void runStandard2() throws Exception {
+		
+		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		
+		int i = 1;
+		while (true) {
+			generateIterationInfo(i);
+			addIterationInfoToHistory();
+			
+			trainMainCLassifierOverLabeledSet();
+			classifyInstancesStandard2(this.unlabeledSet);
+
+			if (tempSet.getInstances().size() == 0) {
+				break;
+			}
+			
+			joinClassifiedWithLabeledSet();
+			result.addIterationInfo(this.goodClassifiedInstances);
+			
+			clearTempSet();
+			i++;
+			printIterationInfo();
+		}
+		mainClassifierJob();
+	}
+	
 	
 	private void trainMainCLassifierOverLabeledSet() throws Exception {
 		this.mainClassifier.buildClassifier(this.labeledSet.getInstances());
@@ -224,6 +261,44 @@ public class SelfTrainingMachine {
 			}
 		}
 		
+		this.goodClassifiedInstances = tempSet.getInstances().size();
+		sb.append("\n");
+		addToHistory(sb.toString());
+	}
+	
+	private void classifyInstancesStandard2(Dataset dataset) throws Exception {
+		
+		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
+		int amount = this.amountToJoin;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
+		
+		InstanceResultStandard instanceResultStandard;
+		
+		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
+		while(iterator.hasNext()) {
+			Instance instance = iterator.next();
+			instanceResultStandard = new InstanceResultStandard(instance);
+			instanceResultStandard.addConfidences(this.mainClassifier.distributionForInstance(instance));
+			standardResults.add(instanceResultStandard);
+
+			sb.append(instanceResultStandard.outputDataToCsv() + "\n");
+		}
+		
+		Collections.sort(standardResults, InstanceResultStandard.bestConfidenceComparatorDesc);
+		
+		if(this.unlabeledSet.getInstances().size() < amount*2) {
+			amount = this.unlabeledSet.getInstances().size();
+		}
+		
+		for(int i = 0; i < amount; i++) {
+			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
+			d.setClassValue(standardResults.get(i).getBestClass());
+			tempSet.addInstance(d); //CAUTION
+			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
+		}
+
 		this.goodClassifiedInstances = tempSet.getInstances().size();
 		sb.append("\n");
 		addToHistory(sb.toString());

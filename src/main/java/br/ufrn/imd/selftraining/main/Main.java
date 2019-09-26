@@ -1,8 +1,11 @@
-package br.ufrn.imd.selftraining;
+package br.ufrn.imd.selftraining.main;
 
 import java.util.ArrayList;
 
+import br.ufrn.imd.selftraining.core.Dataset;
+import br.ufrn.imd.selftraining.core.SelfTrainingMachine;
 import br.ufrn.imd.selftraining.filemanipulation.SelfTrainingOutputWriter;
+import br.ufrn.imd.selftraining.results.SelfTrainingResult;
 
 public class Main {
 

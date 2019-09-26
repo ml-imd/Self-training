@@ -1,9 +1,12 @@
-package br.ufrn.imd.selftraining;
+package br.ufrn.imd.selftraining.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import br.ufrn.imd.selftraining.results.FoldResult;
+import br.ufrn.imd.selftraining.results.InstanceResult;
+import br.ufrn.imd.selftraining.results.InstanceResultStandard;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.SMO;
@@ -14,7 +17,7 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class SelfTrainingMachine {
+public class SelfTrainingMachine{
 
 	private Dataset validationSet;
 	private Dataset testSet;

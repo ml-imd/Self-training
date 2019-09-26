@@ -1,4 +1,4 @@
-package br.ufrn.imd.selftraining;
+package br.ufrn.imd.selftraining.results;
 
 import java.util.ArrayList;
 import java.util.Comparator;

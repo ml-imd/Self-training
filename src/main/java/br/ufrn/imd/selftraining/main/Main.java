@@ -18,8 +18,8 @@ public class Main {
 
 	public static String selfTrainingVersionOne = "ST_VERSION_01";
 	public static String selfTrainingVersionTwo = "ST_VERSION_02";
-	public static String selfTrainingStandard = "ST_VERSION_STANDARD";
-	public static String selfTrainingStandard2 = "ST_VERSION_STANDARD_2";
+	public static String selfTrainingStandard = "ST_VERSION_STANDARD_LAZY";
+	public static String selfTrainingStandard2 = "ST_VERSION_STANDARD";
 	
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
@@ -34,38 +34,44 @@ public class Main {
 		
 		for (Dataset d : datasets) {
 			
-			//run(d, selfTrainingVersionOne);
-			//run(d, selfTrainingVersionTwo);
-			//run(d, selfTrainingStandard);
+			run(d, selfTrainingVersionOne);
+			run(d, selfTrainingVersionTwo);
+			run(d, selfTrainingStandard);
 			run(d, selfTrainingStandard2);
 		}
 	}
 
 	public static void populateDatasets() {
-		String basePath = new String("src/main/resources/datasets/");
+		String basePath = new String("src/main/resources/datasets/experiment2/");
 		
 		ArrayList<String> sources = new ArrayList<String>();
-		sources.add("Abalone.arff");
-		sources.add("Adult.arff");
-		sources.add("Arrhythmia.arff");
-		sources.add("Automobile.arff");
+		sources.add("Btsc.arff");
 		sources.add("Car.arff");
-		sources.add("Dermatology.arff");
-		sources.add("Ecoli.arff");
-		sources.add("Flags.arff");
-		sources.add("GermanCredit.arff");
-		sources.add("GlassIdentification.arff");
-		sources.add("ImageSegmentation.arff");
-		sources.add("KR-vs-KP.arff");
-		sources.add("Madelon.arff");
-		sources.add("Nursery.arff");
-		sources.add("Secom.arff");
+		sources.add("Cnae-9.arff");
+		sources.add("Haberman.arff");
+		sources.add("Hill-valley.arff");
+		sources.add("Ilpd.arff");
+		sources.add("Image-segmentation.arff");
+		sources.add("Kr-vs-kp.arff");
+		sources.add("Leukemia.arff");
+		sources.add("Mammographic-mass.arff");
+		sources.add("Multiple-features-karhunen.arff");
+		sources.add("Mushroom.arff");
+		sources.add("Musk.arff");
+		sources.add("Ozone-level-detection.arff");
+		sources.add("Pen-digits.arff");
+		sources.add("Phishing-website.arff");
+		sources.add("Pima.arff");
+		sources.add("Planning-relax.arff");
+		sources.add("Seeds.arff");
 		sources.add("Semeion.arff");
-		sources.add("SolarFlare1.arff");
-		sources.add("Sonar.arff");
+		sources.add("Solar-flare.arff");
+		sources.add("Spectf-heart.arff");
+		sources.add("Tic-tac-toe-endgame.arff");
+		sources.add("Twonorm.arff");
+		sources.add("Vehicle.arff");
 		sources.add("Waveform.arff");
-		sources.add("Wine.arff");
-		sources.add("Yeast.arff");
+		sources.add("Wilt.arff");
 		
 		for(String s: sources) {
 			Dataset d;

@@ -72,7 +72,8 @@
 %    From: 6                       To: path                
 %    From: 7                       To: grass               
 %
-@relation segment
+@relation Image-segmentation
+
 @attribute region-centroid-col real
 @attribute region-centroid-row real
 @attribute region-pixel-count real

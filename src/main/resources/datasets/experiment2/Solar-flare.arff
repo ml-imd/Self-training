@@ -64,7 +64,7 @@
 %%     M-class flares 1030  29  3  2  1  0  1  0  0  1066
 %%     X-class flares 1061   4  1  0  0  0  0  0  0  1066
 
-@relation flare
+@relation Solar-flare
 
 @attribute V1 {A,H,K,R,S,X}
 @attribute V2 {C,I,O,X}

@@ -1,4 +1,4 @@
-@relation pima-indians-diabetes
+@relation Pima
 
 @attribute NbPregnant numeric
 @attribute Glucose numeric

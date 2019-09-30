@@ -34,10 +34,11 @@ public class Main {
 		
 		for (Dataset d : datasets) {
 			
-			run(d, selfTrainingVersionOne);
-			run(d, selfTrainingVersionTwo);
 			run(d, selfTrainingStandard);
 			run(d, selfTrainingStandard2);
+			run(d, selfTrainingVersionOne);
+			run(d, selfTrainingVersionTwo);
+			
 		}
 	}
 
@@ -89,7 +90,7 @@ public class Main {
 	public static void run(Dataset dataset, String selfTrainingVersion) throws Exception {
 		
 		str = new SelfTrainingResult(numFolds, dataset.getDatasetName(), selfTrainingVersion);
-		sow = new SelfTrainingOutputWriter(outputResultBasePath + selfTrainingVersion + "_" + dataset.getDatasetName());
+		sow = new SelfTrainingOutputWriter(outputResultBasePath + selfTrainingVersion + "_exp2_" + dataset.getDatasetName());
 		
 		dataset.shuffleInstances(seed);
 		folds = Dataset.splitDataset(dataset, numFolds);

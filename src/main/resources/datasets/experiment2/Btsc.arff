@@ -85,7 +85,7 @@
 %%  model using Bernoulli sequence, "Expert Systems with Applications, 2008 
 %%  (doi:10.1016/j.eswa.2008.07.018).
 
-@relation blood-transfusion-service
+@relation Btsc
 
 @attribute V1 numeric
 @attribute V2 numeric

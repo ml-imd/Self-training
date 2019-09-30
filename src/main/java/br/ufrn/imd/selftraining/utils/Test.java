@@ -1,31 +1,24 @@
 package br.ufrn.imd.selftraining.utils;
 
+import br.ufrn.imd.selftraining.core.Dataset;
+import weka.core.EuclideanDistance;
+import weka.core.Instance;
+
 public class Test {
 
 	
-	public static void main(String[] args) {
-		int size = 2358;
+	public static void main(String[] args) throws Exception {
+		Dataset d = new Dataset("src/main/resources/datasets/experiment2/"+"Car.arff");
+		Instance[] centroids = Mathematics.centroidsOf(d.getInstances());
 		
-		int percent = 10;
-		int amount = (int)size / percent;
-		
-		System.out.println (size + "\n" +
-							percent + "\n" +
-							amount);
-		
-		
-		
-		for(int i = 0; i < 10;i++ ){
-			if(size < amount*2) {
-				amount = size;
-			}
-			int control = 0;
-			for(int j = 0; j < amount; j++) {
-				size--;
-				control++;
-			}
-			System.out.println("adicionados: " + control);
+		for(int i = 0; i < centroids.length; i++) {
+			System.out.println("centroid " + i +" = " + centroids[i].toString());
 		}
+		
+		System.out.println(d.getInstances().toString());
+		
+		
+		
 		
 	}
 	

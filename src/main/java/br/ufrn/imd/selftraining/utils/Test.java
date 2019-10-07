@@ -15,7 +15,13 @@ public class Test {
 			System.out.println("centroid " + i +" = " + centroids[i].toString());
 		}
 		
-		System.out.println(d.getInstances().toString());
+		System.out.println("DISTANCES");
+		
+		Instance inst = (Instance) d.getInstances().get(0).copy();
+		
+		for(int i = 0; i < centroids.length; i++) {
+			System.out.println(Mathematics.euclidianDistance(inst, centroids[i]));
+		}
 		
 		
 		

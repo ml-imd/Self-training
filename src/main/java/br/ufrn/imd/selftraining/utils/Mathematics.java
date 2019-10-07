@@ -325,4 +325,26 @@ public class Mathematics {
 		return distanceMatrix;
 	}
 
+	//Euclidian Distance
+	public static double euclidianDistance(Instance x, Instance y) {
+		
+		if(x==null || y==null) {
+			return Double.POSITIVE_INFINITY;
+		}
+		
+		if (x.numAttributes() != y.numAttributes())
+	        throw new IllegalArgumentException(String.format("Arrays have different length: x[%d], y[%d]", x.numAttributes(), y.numAttributes()));
+
+	    int n = x.numAttributes();
+	    double dist = 0.0;
+	    for (int i = 0; i < n; i++) {
+	    	if (!Double.isNaN(x.value(i)) && !Double.isNaN(y.value(i))) {
+	            double d = x.value(i) - y.value(i);
+	            dist += d * d;
+	        }
+	    }	    
+	    return Math.sqrt(dist);
+	}
+	
+	
 }

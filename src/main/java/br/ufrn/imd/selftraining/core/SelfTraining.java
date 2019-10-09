@@ -14,6 +14,9 @@ public class SelfTraining {
 	protected Dataset unlabeledSet;
 	protected int labeledSetPercentual = 10;
 
+	protected int unlabeledSetJoinRate = 10;
+	protected int amountToJoin = 0;
+	
 	protected Dataset tempSet;
 
 	protected Classifier mainClassifier;
@@ -23,6 +26,10 @@ public class SelfTraining {
 	protected FoldResult result;
 	protected String history;
 	protected String iterationInfo;
+	
+	public SelfTraining() {
+		
+	}
 	
 	public SelfTraining(Dataset testSet, Dataset validationSet) {
 		

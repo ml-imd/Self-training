@@ -1,17 +1,19 @@
 package br.ufrn.imd.selftraining.results;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.TreeMap;
 
 import weka.core.Instance;
 
-public class InstanceResult {
+public class InstanceResult{
 
 	private Instance instance;
 	private ArrayList<Double> predictions;
 	private TreeMap<Double, Integer> agreementsPerClass;
 	private Double bestClass;
 	private Integer bestAgreement;
+	private Double factor;
 
 	public InstanceResult(Instance instance) {
 		this.instance = instance;
@@ -19,6 +21,7 @@ public class InstanceResult {
 		this.agreementsPerClass = new TreeMap<Double, Integer>();
 		this.bestClass = -1.0;
 		this.bestAgreement = 0;
+		this.factor = 0.0;
 	}
 
 	public void addPrediction(Double prediction) {
@@ -32,6 +35,10 @@ public class InstanceResult {
 		}
 	}
 
+	public int getBestClassIndex() {
+		return this.bestClass.intValue();
+	}
+	
 	public Instance getInstance() {
 		return instance;
 	}
@@ -72,6 +79,14 @@ public class InstanceResult {
 		this.bestAgreement = bestAgreement;
 	}
 
+	public Double getFactor() {
+		return factor;
+	}
+
+	public void setFactor(Double factor) {
+		this.factor = factor;
+	}
+
 	/**
 	 * 
 	 * @return This method return one string under csv rules, separated by ";" and
@@ -90,5 +105,59 @@ public class InstanceResult {
 
 		return sb.toString();
 	}
+	
+	/**
+	 * 
+	 * @return This method return one string under csv rules, separated by ";" and
+	 *         with all data recorded inside object at the moment of method's call.
+	 *         this is different of "outputDataToCsv()" cause adds the factor at the end of line
+	 * 
+	 */
+	public String outputDataToCsvWithDistanceFactor() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(instance.toString());
+		sb.append(";");
+		sb.append(agreementsPerClass.toString());
+		sb.append(";");
+		sb.append(bestClass);
+		sb.append(";");
+		sb.append(bestAgreement);
+		sb.append(";");
+		sb.append(factor);
+
+		return sb.toString();
+	}
+	
+	public static Comparator<InstanceResult> factorComparatorAsc = new Comparator<InstanceResult>() {
+
+		public int compare(InstanceResult ir1, InstanceResult ir2) {
+			double x = ir1.getFactor() - ir2.getFactor();
+			if(x > 0) {
+				return 1;
+			}
+			else if(x == 0) {
+				return 0;
+			}
+			else{
+				return -1;
+			}
+		}
+	};
+
+	public static Comparator<InstanceResult> factorComparatorDesc = new Comparator<InstanceResult>() {
+
+		public int compare(InstanceResult ir1, InstanceResult ir2) {
+			double x = ir2.getFactor() - ir1.getFactor();
+			if(x > 0) {
+				return 1;
+			}
+			else if(x == 0) {
+				return 0;
+			}
+			else{
+				return -1;
+			}
+		}
+	};
 
 }

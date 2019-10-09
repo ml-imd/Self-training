@@ -1,9 +1,11 @@
 package br.ufrn.imd.selftraining.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import br.ufrn.imd.selftraining.results.InstanceResult;
+import br.ufrn.imd.selftraining.utils.Mathematics;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.SMO;
@@ -81,7 +83,72 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 		}
 		mainClassifierJob();
 	}
+	
+	/**
+	 * make pseudo-label with pool and after check the agreement, get the class for the
+	 * best instances (above agreementThreshold) with the main classifier) 
+	 * 
+	 * @throws Exception
+	 */
+	public void runVersionOneDistanceFactor() throws Exception {
 		
+		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		
+		int i = 1;
+		while (true) {
+			generateIterationInfo(i);
+			addIterationInfoToHistory();
+			
+			trainMainCLassifierOverLabeledSet();
+			trainClassifiersPool();
+			classifyInstancesAndCheckAgreementDistanceFactor(this.unlabeledSet);
+
+			if (tempSet.getInstances().size() == 0) {
+				break;
+			}
+			
+			classifyBestWithMainClassifier();
+			joinClassifiedWithLabeledSet();
+			result.addIterationInfo(this.goodClassifiedInstances);
+			clearTempSet();
+			i++;
+			printIterationInfo();
+		}
+		mainClassifierJob();
+	}
+	
+	/**
+	 * make pseudo-label with pool and after check the agreement, get the class
+	 * for the best instances (above agreementThreshold) using the label voted by pool
+	 * 
+	 * @throws Exception
+	 */
+	public void runVersionTwoDistanceFactor() throws Exception {
+		
+		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		
+		int i = 1;
+		while (true) {
+			generateIterationInfo(i);
+			addIterationInfoToHistory();
+			trainMainCLassifierOverLabeledSet();
+			trainClassifiersPool();
+			classifyInstancesCheckAgreementPoolDistanceFactor(this.unlabeledSet);
+
+			if (tempSet.getInstances().size() == 0) {
+				break;
+			}
+			joinClassifiedWithLabeledSet();
+			result.addIterationInfo(this.goodClassifiedInstances);
+			clearTempSet();
+			i++;
+			printIterationInfo();
+			
+		}
+		mainClassifierJob();
+	}
+	
+	
 	public void trainClassifiersPool() throws Exception {
 
 		for (Classifier c: pool) {
@@ -146,6 +213,98 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			}
 			sb.append(instanceResult.outputDataToCsv() + "\n");
 		}
+		this.goodClassifiedInstances = tempSet.getInstances().size();
+		sb.append("\n");
+		addToHistory(sb.toString());
+	}
+	
+	private void classifyInstancesAndCheckAgreementDistanceFactor(Dataset dataset) throws Exception {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
+		
+		ArrayList<InstanceResult> standardResults = new ArrayList<InstanceResult>();
+		Instance[] centroids =  Mathematics.centroidsOf(this.labeledSet.getInstances());
+		int amount = this.amountToJoin;
+
+		InstanceResult instanceResult;
+		
+		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
+		while(iterator.hasNext()) {
+			Instance instance = iterator.next();
+			instanceResult = new InstanceResult(instance);
+			for(Classifier c: this.pool) {
+				instanceResult.addPrediction(c.classifyInstance(instance));
+			}
+			
+			Double distance = Mathematics.euclidianDistance(instance, centroids[instanceResult.getBestClassIndex()]);
+			instanceResult.setFactor(instanceResult.getBestAgreement() * (1 / distance));
+			standardResults.add(instanceResult);
+		}
+			
+		Collections.sort(standardResults, InstanceResult.factorComparatorDesc);
+		
+		if(this.unlabeledSet.getInstances().size() < amount*2) {
+			amount = this.unlabeledSet.getInstances().size();
+		}
+		
+		for(InstanceResult ir: standardResults) {
+			sb.append(ir.outputDataToCsvWithDistanceFactor() + "\n");
+		}
+		
+		for(int i = 0; i < amount; i++) {
+			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
+			//class value come from main classifier in next step (there was here and line to get best class and put inside class of "d")
+			tempSet.addInstance(d); //CAUTION
+			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
+		}
+		
+		this.goodClassifiedInstances = tempSet.getInstances().size();
+		sb.append("\n");
+		addToHistory(sb.toString());
+	}
+	
+	private void classifyInstancesCheckAgreementPoolDistanceFactor(Dataset dataset) throws Exception {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
+		
+		ArrayList<InstanceResult> standardResults = new ArrayList<InstanceResult>();
+		Instance[] centroids =  Mathematics.centroidsOf(this.labeledSet.getInstances());
+		int amount = this.amountToJoin;
+		
+		InstanceResult instanceResult;
+		
+		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
+		while(iterator.hasNext()) {
+			Instance instance = iterator.next();
+			instanceResult = new InstanceResult(instance);
+			for(Classifier c: this.pool) {
+				instanceResult.addPrediction(c.classifyInstance(instance));
+			}
+			
+			Double distance = Mathematics.euclidianDistance(instance, centroids[instanceResult.getBestClassIndex()]);
+			instanceResult.setFactor(instanceResult.getBestAgreement() * (1 / distance));
+			standardResults.add(instanceResult);
+		}
+		
+		Collections.sort(standardResults, InstanceResult.factorComparatorDesc);
+		
+		if(this.unlabeledSet.getInstances().size() < amount*2) {
+			amount = this.unlabeledSet.getInstances().size();
+		}
+		
+		for(InstanceResult ir: standardResults) {
+			sb.append(ir.outputDataToCsvWithDistanceFactor() + "\n");
+		}
+		
+		for(int i = 0; i < amount; i++) {
+			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
+			d.setClassValue(standardResults.get(i).getBestClass());
+			tempSet.addInstance(d); //CAUTION
+			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
+		}
+		
 		this.goodClassifiedInstances = tempSet.getInstances().size();
 		sb.append("\n");
 		addToHistory(sb.toString());

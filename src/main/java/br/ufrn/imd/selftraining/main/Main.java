@@ -29,7 +29,6 @@ public class Main {
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
 	
-	
 	public static void main(String[] args) throws Exception {
 		datasets = new ArrayList<Dataset>();
 		folds = new ArrayList<Dataset>();

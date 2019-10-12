@@ -85,8 +85,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	}
 	
 	/**
-	 * make pseudo-label with pool and after check the agreement, get the class for the
-	 * best instances (above agreementThreshold) with the main classifier) 
+	 * TO DO
 	 * 
 	 * @throws Exception
 	 */
@@ -118,8 +117,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	}
 	
 	/**
-	 * make pseudo-label with pool and after check the agreement, get the class
-	 * for the best instances (above agreementThreshold) using the label voted by pool
+	 * TO DO
 	 * 
 	 * @throws Exception
 	 */

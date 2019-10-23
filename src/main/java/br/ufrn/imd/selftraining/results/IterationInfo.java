@@ -3,9 +3,11 @@ package br.ufrn.imd.selftraining.results;
 public class IterationInfo {
 	
 	private int addedTolabeled;
-
-	public IterationInfo(int addedTolabeled) {
+	private int missClassifiedInstances;
+	
+	public IterationInfo(int addedTolabeled, int missClassifiedInstances) {
 		this.addedTolabeled = addedTolabeled;
+		this.missClassifiedInstances = missClassifiedInstances;
 	}
 	
 	public int getAddedTolabeled() {
@@ -15,5 +17,14 @@ public class IterationInfo {
 	public void setAddedTolabeled(int addedTolabeled) {
 		this.addedTolabeled = addedTolabeled;
 	}
+
+	public int getMissClassifiedInstances() {
+		return missClassifiedInstances;
+	}
+
+	public void setMissClassifiedInstances(int missClassifiedInstances) {
+		this.missClassifiedInstances = missClassifiedInstances;
+	}
+	
 	
 }

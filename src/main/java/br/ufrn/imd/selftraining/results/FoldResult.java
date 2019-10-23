@@ -16,8 +16,8 @@ public class FoldResult {
 		this.iterationInfo = new ArrayList<IterationInfo>();
 	}
 
-	public void addIterationInfo(int addedToLabeled) {
-		this.iterationInfo.add(new IterationInfo(addedToLabeled));
+	public void addIterationInfo(int addedToLabeled, int missClassifiedInstances) {
+		this.iterationInfo.add(new IterationInfo(addedToLabeled, missClassifiedInstances));
 	}
 	
 	public double getAccuracy() {
@@ -71,8 +71,8 @@ public class FoldResult {
 	public String onlyValuesToString() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(formatValue(accuracy) + "\t\t");
-		sb.append(formatValue(error) + "\t\t");
+		sb.append(formatValue(accuracy) + "%\t");
+		sb.append(formatValue(error) + "%\t");
 		sb.append(formatValue(fMeasure) + "\t\t");
 		sb.append(formatValue(precision) + "\t\t");
 		sb.append(formatValue(recall) + "\t\t");

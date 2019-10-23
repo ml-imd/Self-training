@@ -38,7 +38,7 @@ public class SelfTrainingStandard extends SelfTraining{
 			}
 			
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			
 			clearTempSet();
 			i++;
@@ -68,7 +68,7 @@ public class SelfTrainingStandard extends SelfTraining{
 			}
 			
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			
 			clearTempSet();
 			i++;
@@ -99,7 +99,7 @@ public class SelfTrainingStandard extends SelfTraining{
 			}
 			
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			
 			clearTempSet();
 			i++;
@@ -109,6 +109,8 @@ public class SelfTrainingStandard extends SelfTraining{
 	}
 	
 	private void classifyInstancesStandard(Dataset dataset) throws Exception {
+
+		this.missClassifiedInstances = 0;
 		
 		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		int amount = this.amountToJoin;
@@ -138,6 +140,11 @@ public class SelfTrainingStandard extends SelfTraining{
 			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
 			d.setClassValue(standardResults.get(i).getBestClass());
 			tempSet.addInstance(d); //CAUTION
+			
+			if(standardResults.get(i).getInstance().classValue() != standardResults.get(i).getBestClass()) {
+				this.missClassifiedInstances += 1;
+			}
+			
 			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
 		}
 

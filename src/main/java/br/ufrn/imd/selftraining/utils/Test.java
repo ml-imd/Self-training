@@ -3,6 +3,7 @@ package br.ufrn.imd.selftraining.utils;
 import br.ufrn.imd.selftraining.core.Dataset;
 import weka.core.EuclideanDistance;
 import weka.core.Instance;
+import weka.filters.unsupervised.attribute.RandomSubset;
 
 public class Test {
 
@@ -23,8 +24,9 @@ public class Test {
 			System.out.println(Mathematics.euclidianDistance(inst, centroids[i]));
 		}
 		
-		
-		
+		RandomSubset rss = new RandomSubset();
+		rss.setInputFormat(d.getInstances());
+		System.out.println(rss.getOutputFormat());
 		
 	}
 	

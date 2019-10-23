@@ -39,11 +39,11 @@ public class Main {
 		for (Dataset d : datasets) {
 			
 			//run(d, selfTrainingStandard);
-			//run(d, selfTrainingVersionOne);
+			run(d, selfTrainingVersionOne);
 			//run(d, selfTrainingVersionTwo);
 			
-			run(d, selfTrainingVersionOneDistance);
-			run(d, selfTrainingVersionTwoDistance);
+			//run(d, selfTrainingVersionOneDistance);
+			//run(d, selfTrainingVersionTwoDistance);
 			//run(d, selfTrainingStandardDistance);
 		}
 	}
@@ -52,13 +52,13 @@ public class Main {
 		String basePath = new String("src/main/resources/datasets/experiment_all/");
 		
 		ArrayList<String> sources = new ArrayList<String>();
-		sources.add("Abalone.arff");
-		sources.add("Adult.arff");
+		//sources.add("Abalone.arff");
+		//sources.add("Adult.arff");
 		sources.add("Arrhythmia.arff");
 		sources.add("Automobile.arff");
 		sources.add("Btsc.arff");
-		sources.add("Car.arff");
-		sources.add("Cnae.arff");
+		//sources.add("Car.arff");
+		//sources.add("Cnae.arff");
 		sources.add("Dermatology.arff");
 		sources.add("Ecoli.arff");
 		sources.add("Flags.arff");
@@ -67,34 +67,34 @@ public class Main {
 		sources.add("Haberman.arff");
 		sources.add("HillCalley.arff");
 		sources.add("Ilpd.arff");
-		sources.add("ImageSegmentation.arff");
-		sources.add("KrVsKp.arff");
+		//sources.add("ImageSegmentation_norm.arff");
+		//sources.add("KrVsKp.arff"); 
 		sources.add("Leukemia.arff");
-		sources.add("Madelon.arff");
+		//sources.add("Madelon.arff"); 
 		sources.add("MammographicMass.arff");
-		sources.add("MultipleFeaturesKarhunen.arff");
-		sources.add("Mushroom.arff");
-		sources.add("Musk.arff");
-		sources.add("Nursery.arff");
-		sources.add("OzoneLevelDetection.arff");
-		sources.add("PenDigits.arff");
-		sources.add("PhishingWebsite.arff");
+		//sources.add("MultipleFeaturesKarhunen.arff"); 
+		//sources.add("Mushroom.arff");
+		//sources.add("Musk.arff"); 
+		//sources.add("Nursery.arff");
+		//sources.add("OzoneLevelDetection.arff"); 
+		//sources.add("PenDigits.arff");
+		//sources.add("PhishingWebsite.arff"); 
 		sources.add("Pima.arff");
-		sources.add("PlanningRelax.arff");
-		sources.add("Secom.arff");
-		sources.add("Seeds.arff");
-		sources.add("Semeion.arff");
-		sources.add("SolarFlare.arff");
+		sources.add("PlanningRelax.arff"); 
+		//sources.add("Secom.arff");
+		sources.add("Seeds.arff"); 
+		//sources.add("Semeion.arff");
+		//sources.add("SolarFlare.arff"); 
 		sources.add("SolarFlare1.arff");
-		sources.add("Sonar.arff");
+		sources.add("Sonar.arff"); 
 		sources.add("SpectfHeart.arff");
-		sources.add("TicTacToeEndgame.arff");
-		sources.add("Twonorm.arff");
-		sources.add("Vehicle.arff");
-		sources.add("Waveform.arff");
-		sources.add("Wilt.arff");
-		sources.add("Wine.arff");
-		sources.add("Yeast.arff");
+		sources.add("TicTacToeEndgame.arff"); 
+		//sources.add("Twonorm.arff");
+		sources.add("Vehicle.arff"); 
+		//sources.add("Waveform.arff");
+		//sources.add("Wilt.arff"); 
+		//sources.add("Wine.arff");
+		//sources.add("Yeast.arff");
 
 		for(String s: sources) {
 			Dataset d;
@@ -111,7 +111,7 @@ public class Main {
 	public static void run(Dataset dataset, String selfTrainingVersion) throws Exception {
 		
 		str = new SelfTrainingResult(numFolds, dataset.getDatasetName(), selfTrainingVersion);
-		sow = new SelfTrainingOutputWriter(outputResultBasePath + selfTrainingVersion + "_all_" + dataset.getDatasetName());
+		sow = new SelfTrainingOutputWriter(outputResultBasePath + selfTrainingVersion + "_ERROR_" + dataset.getDatasetName());
 
 		dataset.shuffleInstances(seed);
 		folds = Dataset.splitDataset(dataset, numFolds);
@@ -128,7 +128,22 @@ public class Main {
 				}
 			}
 			
-			if(selfTrainingVersion.equals(selfTrainingStandardDistance)) {
+			if(selfTrainingVersion.equals(selfTrainingStandard)) {
+				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
+				sts.runStandard();
+				st = (SelfTrainingStandard)sts;
+			}
+			else if(selfTrainingVersion.equals(selfTrainingVersionOne)) {
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest), validation);
+				steb.runVersionOne();
+				st = (SelfTrainingEnsembleBased)steb;
+			}
+			else if(selfTrainingVersion.equals(selfTrainingVersionTwo)) {
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest), validation);
+				steb.runVersionTwo();
+				st = (SelfTrainingEnsembleBased)steb;
+			}
+			else if(selfTrainingVersion.equals(selfTrainingStandardDistance)) {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runStandardDistanceFactor();
 				st = (SelfTrainingStandard)sts;

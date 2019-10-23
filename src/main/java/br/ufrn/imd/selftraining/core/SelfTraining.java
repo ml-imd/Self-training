@@ -22,7 +22,8 @@ public class SelfTraining {
 	protected Classifier mainClassifier;
 
 	protected int goodClassifiedInstances = 0;
-
+	protected int missClassifiedInstances = 0;
+	
 	protected FoldResult result;
 	protected String history;
 	protected String iterationInfo;
@@ -219,4 +220,27 @@ public class SelfTraining {
 		this.labeledSetPercentual = labeledSetPercentual;
 	}
 
+	public int getUnlabeledSetJoinRate() {
+		return unlabeledSetJoinRate;
+	}
+
+	public void setUnlabeledSetJoinRate(int unlabeledSetJoinRate) {
+		this.unlabeledSetJoinRate = unlabeledSetJoinRate;
+	}
+
+	public int getAmountToJoin() {
+		return amountToJoin;
+	}
+
+	public void setAmountToJoin(int amountToJoin) {
+		this.amountToJoin = amountToJoin;
+	}
+
+	public int getMissClassifiedInstances() {
+		return missClassifiedInstances;
+	}
+
+	public void setMissClassifiedInstances(int missClassifiedInstances) {
+		this.missClassifiedInstances = missClassifiedInstances;
+	}
 }

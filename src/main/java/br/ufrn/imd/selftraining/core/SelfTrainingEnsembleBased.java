@@ -49,7 +49,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			
 			classifyBestWithMainClassifier();
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
 			printIterationInfo();
@@ -75,7 +75,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 				break;
 			}
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
 			printIterationInfo();
@@ -108,7 +108,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			
 			classifyBestWithMainClassifier();
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
 			printIterationInfo();
@@ -137,7 +137,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 				break;
 			}
 			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances);
+			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
 			printIterationInfo();
@@ -186,6 +186,8 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	
 	private void classifyInstancesCheckAgreementPool(Dataset dataset) throws Exception {
 		
+		this.missClassifiedInstances = 0;
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
 		
@@ -205,6 +207,10 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			if(instanceResult.getBestAgreement() >= value) {
 				DenseInstance d = (DenseInstance) instance.copy();
 				d.setClassValue(instanceResult.getBestClass());
+				
+				if(d.classValue() != instance.classValue()) {
+					this.missClassifiedInstances += 1;
+				}
 				
 				tempSet.addInstance(d); //CAUTION
 				iterator.remove();
@@ -309,8 +315,14 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	}
 	
 	private void classifyBestWithMainClassifier() throws Exception {
+		this.missClassifiedInstances = 0;
 		for (Instance i : this.tempSet.getInstances()) {
 			double x = this.mainClassifier.classifyInstance(i);
+			
+			if(x != i.classValue()) {
+				this.missClassifiedInstances += 1;
+			}
+			
 			i.setClassValue(x);
 		}
 	}

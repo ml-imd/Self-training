@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import br.ufrn.imd.selftraining.core.Dataset;
 import br.ufrn.imd.selftraining.core.SelfTraining;
 import br.ufrn.imd.selftraining.core.SelfTrainingEnsembleBased;
+import br.ufrn.imd.selftraining.core.SelfTrainingEnsembleBasedTest;
 import br.ufrn.imd.selftraining.core.SelfTrainingStandard;
 import br.ufrn.imd.selftraining.filemanipulation.SelfTrainingOutputWriter;
 import br.ufrn.imd.selftraining.results.SelfTrainingResult;
@@ -26,6 +27,8 @@ public class Main {
 	public static String selfTrainingVersionTwoDistance = "ST_V_02_DISTANCE";
 	public static String selfTrainingStandardDistance = "ST_VERSION_STD_DISTANCE";
 	
+	public static String selfTrainingTest = "ST_VERSION_TEST";
+	
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
 	
@@ -39,17 +42,22 @@ public class Main {
 		for (Dataset d : datasets) {
 			
 			//run(d, selfTrainingStandard);
-			run(d, selfTrainingVersionOne);
+			//run(d, selfTrainingVersionOne);
 			//run(d, selfTrainingVersionTwo);
 			
 			//run(d, selfTrainingVersionOneDistance);
 			//run(d, selfTrainingVersionTwoDistance);
 			//run(d, selfTrainingStandardDistance);
+			run(d, selfTrainingTest);
 		}
 	}
 
 	public static void populateDatasets() {
 		String basePath = new String("src/main/resources/datasets/experiment_all/");
+		
+		
+
+		
 		
 		ArrayList<String> sources = new ArrayList<String>();
 		//sources.add("Abalone.arff");
@@ -65,7 +73,7 @@ public class Main {
 		sources.add("GermanCredit.arff");
 		sources.add("Glass.arff");
 		sources.add("Haberman.arff");
-		sources.add("HillCalley.arff");
+		sources.add("HillValley.arff");
 		sources.add("Ilpd.arff");
 		//sources.add("ImageSegmentation_norm.arff");
 		//sources.add("KrVsKp.arff"); 
@@ -157,6 +165,11 @@ public class Main {
 				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest), validation);
 				steb.runVersionTwoDistanceFactor();
 				st = (SelfTrainingEnsembleBased)steb;
+			}
+			else if(selfTrainingVersion.equals(selfTrainingTest)) {
+				SelfTrainingEnsembleBasedTest stebt = new SelfTrainingEnsembleBasedTest(Dataset.joinDatasets(foldsForTest), validation);
+				stebt.runTest();
+				st = (SelfTrainingEnsembleBasedTest)stebt;
 			}
 		
 			str.setEnd(System.currentTimeMillis());

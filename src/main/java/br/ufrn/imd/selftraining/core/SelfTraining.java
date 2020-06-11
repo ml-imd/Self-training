@@ -2,6 +2,7 @@ package br.ufrn.imd.selftraining.core;
 
 import br.ufrn.imd.selftraining.results.FoldResult;
 import weka.classifiers.Classifier;
+import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
@@ -75,13 +76,23 @@ public class SelfTraining {
 	
 	protected void createMainClassifier() {
 		// weka.classifiers.trees.J48 -C 0.05 -M 2 (74.4792)
-		J48 j48 = new J48();
+		/*
+		 * J48 j48 = new J48(); try {
+		 * j48.setOptions(weka.core.Utils.splitOptions("-C 0.05 -M 2")); } catch
+		 * (Exception e) { e.printStackTrace(); } this.mainClassifier = (J48) j48;
+		 */
+		
+		//new for test - 26/01/2020
+		//weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a
+		
+		MultilayerPerceptron mlp = new MultilayerPerceptron();
 		try {
-			j48.setOptions(weka.core.Utils.splitOptions("-C 0.05 -M 2"));
+			mlp.setOptions(weka.core.Utils.splitOptions("-L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a"));
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.mainClassifier = (J48) j48;
+		this.mainClassifier = mlp;
 	}
 	
 	protected void joinClassifiedWithLabeledSet() {

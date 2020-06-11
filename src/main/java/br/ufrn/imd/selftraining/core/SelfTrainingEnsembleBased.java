@@ -17,8 +17,8 @@ import weka.core.Instance;
 
 public class SelfTrainingEnsembleBased extends SelfTraining{
 
-	private ArrayList<Classifier> pool;
-	private double agreementThreshold = 75; //percentual
+	protected ArrayList<Classifier> pool;
+	protected double agreementThreshold = 75; //percentual
 	
 	public SelfTrainingEnsembleBased(Dataset testSet, Dataset validationSet) {
 		super(testSet, validationSet);

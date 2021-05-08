@@ -84,6 +84,9 @@ public class FoldResult {
 		String s;
 		if (value < 100) {
 			s = String.format("%.4f", value);
+			if (value < 10) {
+				s = " " + String.format("%.4f", value);
+			}
 		} else {
 			s = String.format("%.3f", value);
 		}

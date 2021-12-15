@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.Random;
 
 import br.ufrn.imd.selftraining.results.InstanceResultStandard;
-import br.ufrn.imd.selftraining.utils.Mathematics;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 
@@ -77,38 +76,7 @@ public class SelfTrainingStandard extends SelfTraining {
 		}
 		mainClassifierJob();
 	}
-
-	/**
-	 * Join the p percent best instances (unlabeledSetJoinRate) according to
-	 * confidence at each iteration but with weight from distance
-	 * 
-	 * @throws Exception
-	 */
-	public void runStandardDistanceFactor() throws Exception {
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
-
-		int i = 1;
-		while (true) {
-			generateIterationInfo(i);
-			addIterationInfoToHistory();
-
-			trainMainCLassifierOverLabeledSet();
-			classifyInstancesStandardDistanceFactor(this.unlabeledSet);
-
-			if (tempSet.getInstances().size() == 0) {
-				break;
-			}
-
-			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
-
-			clearTempSet();
-			i++;
-			printIterationInfo();
-		}
-		mainClassifierJob();
-	}
-
+	
 	/**
 	 * Join the p percent (unlabeledSetJoinRate) according to a random selection
 	 * 
@@ -148,7 +116,7 @@ public class SelfTrainingStandard extends SelfTraining {
 		mainClassifierJob();
 	}
 
-	private void classifyInstancesStandard(Dataset dataset) throws Exception {
+	protected void classifyInstancesStandard(Dataset dataset) throws Exception {
 
 		this.missClassifiedInstances = 0;
 
@@ -193,7 +161,7 @@ public class SelfTrainingStandard extends SelfTraining {
 		addToHistory(sb.toString());
 	}
 
-	private void classifyInstancesStandardLazy(Dataset dataset) throws Exception {
+	protected void classifyInstancesStandardLazy(Dataset dataset) throws Exception {
 
 		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		Double bestConfidence = 0.0;
@@ -231,54 +199,7 @@ public class SelfTrainingStandard extends SelfTraining {
 		addToHistory(sb.toString());
 	}
 
-	private void classifyInstancesStandardDistanceFactor(Dataset dataset) throws Exception {
-
-		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
-		Instance[] centroids = Mathematics.centroidsOf(this.labeledSet.getInstances());
-
-		int amount = this.amountToJoin;
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
-
-		InstanceResultStandard instanceResultStandard;
-
-		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
-		while (iterator.hasNext()) {
-			Instance instance = iterator.next();
-			instanceResultStandard = new InstanceResultStandard(instance);
-			instanceResultStandard.addConfidences(this.mainClassifier.distributionForInstance(instance));
-
-			Double distance = Mathematics.euclidianDistance(instance,
-					centroids[instanceResultStandard.getBestClassIndex()]);
-			instanceResultStandard.setFactor(instanceResultStandard.getBestConfidence() * (1 / distance));
-
-			standardResults.add(instanceResultStandard);
-		}
-
-		Collections.sort(standardResults, InstanceResultStandard.factorComparatorDesc);
-
-		for (InstanceResultStandard irs : standardResults) {
-			sb.append(irs.outputDataToCsvWithDistanceFactor() + "\n");
-		}
-
-		if (this.unlabeledSet.getInstances().size() < amount * 2) {
-			amount = this.unlabeledSet.getInstances().size();
-		}
-
-		for (int i = 0; i < amount; i++) {
-			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
-			d.setClassValue(standardResults.get(i).getBestClass());
-			tempSet.addInstance(d); // CAUTION
-			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
-		}
-
-		this.goodClassifiedInstances = tempSet.getInstances().size();
-		sb.append("\n");
-		addToHistory(sb.toString());
-	}
-
-	private void selectInstancesByRandom() {
+	protected void selectInstancesByRandom() {
 		this.missClassifiedInstances = 0;
 
 		int amount = this.amountToJoin;
@@ -313,7 +234,7 @@ public class SelfTrainingStandard extends SelfTraining {
 		addToHistory(sb.toString());
 	}
 	
-	private void classifyInstancesFromTempWithMainClassifier() throws Exception {
+	protected void classifyInstancesFromTempWithMainClassifier() throws Exception {
 		
 		for(Instance i: this.tempSet.getInstances()) {
 			double d = this.mainClassifier.classifyInstance(i);

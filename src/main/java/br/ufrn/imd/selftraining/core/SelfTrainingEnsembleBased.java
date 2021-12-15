@@ -32,7 +32,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runVersionOne() throws Exception {
+	public void runEbalVersionOne() throws Exception {
 		
 		int i = 1;
 		while (true) {
@@ -63,7 +63,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runVersionTwo() throws Exception {
+	public void runEbalVersionTwo() throws Exception {
 		int i = 1;
 		while (true) {
 			generateIterationInfo(i);
@@ -89,7 +89,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runVersionOneDistanceFactor() throws Exception {
+	public void runDwsaVersionOne() throws Exception {
 		
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 		
@@ -121,7 +121,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runVersionTwoDistanceFactor() throws Exception {
+	public void runDwsaVersionTwo() throws Exception {
 		
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 		

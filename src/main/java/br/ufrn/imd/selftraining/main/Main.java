@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import br.ufrn.imd.selftraining.core.Dataset;
 import br.ufrn.imd.selftraining.core.SelfTraining;
+import br.ufrn.imd.selftraining.core.SelfTrainingDws;
 import br.ufrn.imd.selftraining.core.SelfTrainingEnsembleBased;
 import br.ufrn.imd.selftraining.core.SelfTrainingEnsembleBasedTest;
 import br.ufrn.imd.selftraining.core.SelfTrainingStandard;
@@ -19,16 +20,18 @@ public class Main {
 	public static SelfTrainingResult str;
 	public static int seed;
 
-	public static String selfTrainingVersionOne = "ST_VERSION_01";
-	public static String selfTrainingVersionTwo = "ST_VERSION_02";
 	public static String selfTrainingStandard = "ST_VERSION_STANDARD";
 	public static String selfTrainingRandom = "ST_RANDOM";
-
-	public static String selfTrainingVersionOneDistance = "ST_V_01_DISTANCE";
-	public static String selfTrainingVersionTwoDistance = "ST_V_02_DISTANCE";
-	public static String selfTrainingStandardDistance = "ST_VERSION_STD_DISTANCE";
-
-	public static String selfTrainingTest = "ST_VERSION_TEST";
+	
+	public static String selfTrainingDwsc = "ST_VERSION_DWS_C";
+	public static String selfTrainingDwscNew = "ST_VERSION_DWS_C_NEW";
+	
+	public static String selfTrainingEbalV1 = "ST_EBAL_V_01";
+	public static String selfTrainingEbalV2 = "ST_EBAL_V_02";
+	public static String selfTrainingEbalV3 = "ST_EBAL_V_03";
+	
+	public static String selfTrainingDwsaV1 = "ST_DWS_A_V_01";
+	public static String selfTrainingDwsaV2 = "ST_DWS_A_V_02";
 
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
@@ -41,16 +44,9 @@ public class Main {
 		seed = 19;
 
 		for (Dataset d : datasets) {
+			//run(d, selfTrainingDwsc);
+			run(d, selfTrainingDwscNew);
 
-			// run(d, selfTrainingStandard);
-			// run(d, selfTrainingVersionOne);
-			// run(d, selfTrainingVersionTwo);
-
-			// run(d, selfTrainingVersionOneDistance);
-			// run(d, selfTrainingVersionTwoDistance);
-			// run(d, selfTrainingStandardDistance);
-			// run(d, selfTrainingTest);
-			run(d, selfTrainingRandom);
 		}
 	}
 
@@ -81,47 +77,66 @@ public class Main {
 				}
 			}
 
-			if (selfTrainingVersion.equals(selfTrainingStandard)) {
+			if (selfTrainingVersion.equals(selfTrainingDwscNew)) {
+				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
+				stdws.runStandardDwsNew();
+				st = (SelfTraining) stdws;
+			} 
+			
+			else if (selfTrainingVersion.equals(selfTrainingStandard)) {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runStandard();
 				st = (SelfTrainingStandard) sts;
-			} else if (selfTrainingVersion.equals(selfTrainingVersionOne)) {
-				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
-						validation);
-				steb.runVersionOne();
-				st = (SelfTrainingEnsembleBased) steb;
-			} else if (selfTrainingVersion.equals(selfTrainingVersionTwo)) {
-				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
-						validation);
-				steb.runVersionTwo();
-				st = (SelfTrainingEnsembleBased) steb;
-			} else if (selfTrainingVersion.equals(selfTrainingStandardDistance)) {
-				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
-				sts.runStandardDistanceFactor();
-				st = (SelfTrainingStandard) sts;
-			} else if (selfTrainingVersion.equals(selfTrainingVersionOneDistance)) {
-				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
-						validation);
-				steb.runVersionOneDistanceFactor();
-				st = (SelfTrainingEnsembleBased) steb;
-			} else if (selfTrainingVersion.equals(selfTrainingVersionTwoDistance)) {
-				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
-						validation);
-				steb.runVersionTwoDistanceFactor();
-				st = (SelfTrainingEnsembleBased) steb;
-			} else if (selfTrainingVersion.equals(selfTrainingTest)) {
-				SelfTrainingEnsembleBasedTest stebt = new SelfTrainingEnsembleBasedTest(
-						Dataset.joinDatasets(foldsForTest), validation);
-				stebt.runTest();
-				st = (SelfTrainingEnsembleBasedTest) stebt;
 			}
-
+			
 			else if (selfTrainingVersion.equals(selfTrainingRandom)) {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runRandom();
 				st = (SelfTrainingStandard) sts;
 			}
-
+			
+			else if (selfTrainingVersion.equals(selfTrainingDwsc)) {
+				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
+				stdws.runStandardDws();
+				st = (SelfTraining) stdws;
+			} 
+			
+			else if (selfTrainingVersion.equals(selfTrainingEbalV1)) {
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
+						validation);
+				steb.runEbalVersionOne();
+				st = (SelfTrainingEnsembleBased) steb;
+			} 
+			
+			else if (selfTrainingVersion.equals(selfTrainingEbalV2)) {
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
+						validation);
+				steb.runEbalVersionTwo();
+				st = (SelfTrainingEnsembleBased) steb;
+			}
+			
+			else if (selfTrainingVersion.equals(selfTrainingEbalV3)) {
+				SelfTrainingEnsembleBasedTest stebt = new SelfTrainingEnsembleBasedTest(
+						Dataset.joinDatasets(foldsForTest), validation);
+				stebt.runTest();
+				st = (SelfTrainingEnsembleBasedTest) stebt;
+			} 
+			
+						
+			else if (selfTrainingVersion.equals(selfTrainingDwsaV1)) {
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
+						validation);
+				steb.runDwsaVersionOne();
+				st = (SelfTrainingEnsembleBased) steb;
+			} 
+			
+			else if (selfTrainingVersion.equals(selfTrainingDwsaV2)) {
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
+						validation);
+				steb.runDwsaVersionTwo();
+				st = (SelfTrainingEnsembleBased) steb;
+			} 
+			
 			str.setEnd(System.currentTimeMillis());
 			str.addFoldResult(st.getResult());
 
@@ -168,7 +183,7 @@ public class Main {
 		sources.add("PhishingWebsite.arff");
 		sources.add("Pima.arff");
 		sources.add("PlanningRelax.arff");
-		sources.add("Secom.arff");
+		//sources.add("Secom.arff");
 		sources.add("Seeds.arff");
 		sources.add("Semeion.arff");
 		sources.add("SolarFlare.arff");

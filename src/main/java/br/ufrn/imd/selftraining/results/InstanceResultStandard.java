@@ -15,6 +15,7 @@ public class InstanceResultStandard {
 	
 	private ArrayList<Double> dwsValues;
 	private Double bestDwsValue;
+	private Double bestDwsClass;
 	
 	public InstanceResultStandard(Instance instance) {
 		this.instance = instance;
@@ -25,6 +26,7 @@ public class InstanceResultStandard {
 		
 		this.dwsValues = new ArrayList<Double>();
 		this.bestDwsValue = 0.0;
+		this.bestDwsClass = -1.0;
 	}
 
 	public void addConfidences(double[] predictions) {
@@ -42,7 +44,7 @@ public class InstanceResultStandard {
 			this.dwsValues.add(dwsValues.get(i));
 			if (dwsValues.get(i) >= this.bestDwsValue) {
 				this.bestDwsValue = dwsValues.get(i);
-				this.bestClass = new Double(i);
+				this.bestDwsClass = new Double(i);
 			}
 		}
 	}
@@ -265,6 +267,14 @@ public class InstanceResultStandard {
 
 	public void setBestDwsValue(Double bestDwsValue) {
 		this.bestDwsValue = bestDwsValue;
+	}
+
+	public Double getBestDwsClass() {
+		return bestDwsClass;
+	}
+
+	public void setBestDwsClass(Double bestDwsClass) {
+		this.bestDwsClass = bestDwsClass;
 	}
 
 }

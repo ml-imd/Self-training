@@ -1,4 +1,4 @@
-@relation Flags-weka.filters.unsupervised.attribute.Remove-R1-weka.filters.unsupervised.attribute.Copy-R5-weka.filters.unsupervised.attribute.Remove-R5
+@relation Flags
 
 @attribute zone {1,2,3,4}
 @attribute area numeric

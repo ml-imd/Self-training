@@ -22,14 +22,16 @@ public class Main {
 
 	public static String selfTrainingStandard = "ST_VERSION_STANDARD";
 	public static String selfTrainingRandom = "ST_RANDOM";
-	
+
 	public static String selfTrainingDwsc = "ST_VERSION_DWS_C";
-	public static String selfTrainingDwscNew = "ST_VERSION_DWS_C_NEW";
-	
+	public static String selfTrainingDwscNewSelection = "ST_DWS_C_NEW_SELCTION";
+	public static String selfTrainingDwscNewSelectionLabelling = "ST_DWS_C_NEW_SELCTION_LABELLING";
+	public static String selfTrainingDwscNewLabelling = "ST_DWS_C_NEW_LABELLING";
+
 	public static String selfTrainingEbalV1 = "ST_EBAL_V_01";
 	public static String selfTrainingEbalV2 = "ST_EBAL_V_02";
 	public static String selfTrainingEbalV3 = "ST_EBAL_V_03";
-	
+
 	public static String selfTrainingDwsaV1 = "ST_DWS_A_V_01";
 	public static String selfTrainingDwsaV2 = "ST_DWS_A_V_02";
 
@@ -44,16 +46,17 @@ public class Main {
 		seed = 19;
 
 		for (Dataset d : datasets) {
-			//run(d, selfTrainingDwsc);
-			run(d, selfTrainingDwscNew);
-
+			// run(d, selfTrainingDwsc);
+			run(d, selfTrainingDwscNewSelection);
+			run(d, selfTrainingDwscNewSelectionLabelling);
+			run(d, selfTrainingDwscNewLabelling);
 		}
 	}
 
 	public static void run(Dataset dataset, String selfTrainingVersion) throws Exception {
 
 		System.out.println("Init " + selfTrainingVersion + " over " + dataset.getDatasetName() + " dataset");
-		
+
 		str = new SelfTrainingResult(numFolds, dataset.getDatasetName(), selfTrainingVersion);
 		sow = new SelfTrainingOutputWriter(outputResultBasePath + selfTrainingVersion + "_" + dataset.getDatasetName());
 
@@ -63,12 +66,11 @@ public class Main {
 		str.setBegin(System.currentTimeMillis());
 
 		System.out.print("CURRENT FOLD ... ");
-		
+
 		for (int i = 0; i < numFolds; i++) {
 			System.out.print(i + 1);
 			System.out.print(" ");
-			
-			
+
 			validation = new Dataset(folds.get(i));
 			ArrayList<Dataset> foldsForTest = new ArrayList<Dataset>();
 			for (int j = 0; j < numFolds; j++) {
@@ -77,66 +79,57 @@ public class Main {
 				}
 			}
 
-			if (selfTrainingVersion.equals(selfTrainingDwscNew)) {
+			if (selfTrainingVersion.equals(selfTrainingDwscNewSelection)) {
 				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
-				stdws.runStandardDwsNew();
+				stdws.runStandardDwsNewSelection();
 				st = (SelfTraining) stdws;
-			} 
-			
-			else if (selfTrainingVersion.equals(selfTrainingStandard)) {
+			} else if (selfTrainingVersion.equals(selfTrainingDwscNewSelectionLabelling)) {
+				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
+				stdws.runStandardDwsNewSelectionLabelling();
+				st = (SelfTraining) stdws;
+			} else if (selfTrainingVersion.equals(selfTrainingDwscNewLabelling)) {
+				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
+				stdws.runStandardDwsNewLabelling();
+				st = (SelfTraining) stdws;
+			} else if (selfTrainingVersion.equals(selfTrainingStandard)) {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runStandard();
 				st = (SelfTrainingStandard) sts;
-			}
-			
-			else if (selfTrainingVersion.equals(selfTrainingRandom)) {
+			} else if (selfTrainingVersion.equals(selfTrainingRandom)) {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runRandom();
 				st = (SelfTrainingStandard) sts;
-			}
-			
-			else if (selfTrainingVersion.equals(selfTrainingDwsc)) {
+			} else if (selfTrainingVersion.equals(selfTrainingDwsc)) {
 				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
 				stdws.runStandardDws();
 				st = (SelfTraining) stdws;
-			} 
-			
-			else if (selfTrainingVersion.equals(selfTrainingEbalV1)) {
+			} else if (selfTrainingVersion.equals(selfTrainingEbalV1)) {
 				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
 						validation);
 				steb.runEbalVersionOne();
 				st = (SelfTrainingEnsembleBased) steb;
-			} 
-			
-			else if (selfTrainingVersion.equals(selfTrainingEbalV2)) {
+			} else if (selfTrainingVersion.equals(selfTrainingEbalV2)) {
 				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
 						validation);
 				steb.runEbalVersionTwo();
 				st = (SelfTrainingEnsembleBased) steb;
-			}
-			
-			else if (selfTrainingVersion.equals(selfTrainingEbalV3)) {
+			} else if (selfTrainingVersion.equals(selfTrainingEbalV3)) {
 				SelfTrainingEnsembleBasedTest stebt = new SelfTrainingEnsembleBasedTest(
 						Dataset.joinDatasets(foldsForTest), validation);
 				stebt.runTest();
 				st = (SelfTrainingEnsembleBasedTest) stebt;
-			} 
-			
-						
-			else if (selfTrainingVersion.equals(selfTrainingDwsaV1)) {
+			} else if (selfTrainingVersion.equals(selfTrainingDwsaV1)) {
 				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
 						validation);
 				steb.runDwsaVersionOne();
 				st = (SelfTrainingEnsembleBased) steb;
-			} 
-			
-			else if (selfTrainingVersion.equals(selfTrainingDwsaV2)) {
+			} else if (selfTrainingVersion.equals(selfTrainingDwsaV2)) {
 				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
 						validation);
 				steb.runDwsaVersionTwo();
 				st = (SelfTrainingEnsembleBased) steb;
-			} 
-			
+			}
+
 			str.setEnd(System.currentTimeMillis());
 			str.addFoldResult(st.getResult());
 
@@ -183,7 +176,7 @@ public class Main {
 		sources.add("PhishingWebsite.arff");
 		sources.add("Pima.arff");
 		sources.add("PlanningRelax.arff");
-		//sources.add("Secom.arff");
+		// sources.add("Secom.arff");
 		sources.add("Seeds.arff");
 		sources.add("Semeion.arff");
 		sources.add("SolarFlare.arff");

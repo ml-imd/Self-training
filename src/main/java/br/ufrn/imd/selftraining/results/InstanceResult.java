@@ -266,4 +266,10 @@ public class InstanceResult{
 		}
 	};
 
+	
+	public void correctValues() {
+		if(Double.isInfinite(bestDwsValue)) {
+			bestDwsValue = Double.MAX_VALUE;
+		}
+	}
 }

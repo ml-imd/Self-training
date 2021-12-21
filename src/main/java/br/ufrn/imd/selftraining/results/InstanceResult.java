@@ -15,6 +15,10 @@ public class InstanceResult{
 	private Integer bestAgreement;
 	private Double factor;
 
+	private ArrayList<Double> dwsValues;
+	private Double bestDwsValue;
+	private Double bestDwsClass;
+	
 	public InstanceResult(Instance instance) {
 		this.instance = instance;
 		this.predictions = new ArrayList<Double>();
@@ -22,6 +26,10 @@ public class InstanceResult{
 		this.bestClass = -1.0;
 		this.bestAgreement = 0;
 		this.factor = 0.0;
+		
+		this.dwsValues = new ArrayList<Double>();
+		this.bestDwsValue = 0.0;
+		this.bestDwsClass = -1.0;
 	}
 
 	public void addPrediction(Double prediction) {
@@ -32,6 +40,16 @@ public class InstanceResult{
 		if (agreementsPerClass.get(prediction) >= bestAgreement) {
 			this.bestAgreement = agreementsPerClass.get(prediction);
 			this.bestClass = prediction;
+		}
+	}
+	
+	public void addDwsValues(ArrayList<Double> dwsValues) {
+		for (int i = 0; i < dwsValues.size(); i++) {
+			this.dwsValues.add(dwsValues.get(i));
+			if (dwsValues.get(i) >= this.bestDwsValue) {
+				this.bestDwsValue = dwsValues.get(i);
+				this.bestDwsClass = new Double(i);
+			}
 		}
 	}
 
@@ -86,6 +104,30 @@ public class InstanceResult{
 	public void setFactor(Double factor) {
 		this.factor = factor;
 	}
+	
+	public ArrayList<Double> getDwsValues() {
+		return dwsValues;
+	}
+
+	public void setDwsValues(ArrayList<Double> dwsValues) {
+		this.dwsValues = dwsValues;
+	}
+
+	public Double getBestDwsValue() {
+		return bestDwsValue;
+	}
+
+	public void setBestDwsValue(Double bestDwsValue) {
+		this.bestDwsValue = bestDwsValue;
+	}
+
+	public Double getBestDwsClass() {
+		return bestDwsClass;
+	}
+
+	public void setBestDwsClass(Double bestDwsClass) {
+		this.bestDwsClass = bestDwsClass;
+	}
 
 	/**
 	 * 
@@ -128,6 +170,38 @@ public class InstanceResult{
 		return sb.toString();
 	}
 	
+	public static Comparator<InstanceResult> bestAgreementComparatorAsc = new Comparator<InstanceResult>() {
+
+		public int compare(InstanceResult irs1, InstanceResult irs2) {
+			double x = irs1.getBestAgreement() - irs2.getBestAgreement();
+			if(x > 0) {
+				return 1;
+			}
+			else if(x == 0) {
+				return 0;
+			}
+			else{
+				return -1;
+			}
+		}
+	};
+
+	public static Comparator<InstanceResult> bestAgreementComparatorDesc = new Comparator<InstanceResult>() {
+
+		public int compare(InstanceResult irs1, InstanceResult irs2) {
+			double x = irs2.getBestAgreement() - irs1.getBestAgreement();
+			if(x > 0) {
+				return 1;
+			}
+			else if(x == 0) {
+				return 0;
+			}
+			else{
+				return -1;
+			}
+		}
+	};
+	
 	public static Comparator<InstanceResult> factorComparatorAsc = new Comparator<InstanceResult>() {
 
 		public int compare(InstanceResult ir1, InstanceResult ir2) {
@@ -148,6 +222,38 @@ public class InstanceResult{
 
 		public int compare(InstanceResult ir1, InstanceResult ir2) {
 			double x = ir2.getFactor() - ir1.getFactor();
+			if(x > 0) {
+				return 1;
+			}
+			else if(x == 0) {
+				return 0;
+			}
+			else{
+				return -1;
+			}
+		}
+	};
+	
+	public static Comparator<InstanceResult> bestDwsValueComparatorAsc = new Comparator<InstanceResult>() {
+
+		public int compare(InstanceResult irs1, InstanceResult irs2) {
+			double x = irs1.getBestDwsValue() - irs2.getBestDwsValue();
+			if(x > 0) {
+				return 1;
+			}
+			else if(x == 0) {
+				return 0;
+			}
+			else{
+				return -1;
+			}
+		}
+	};
+
+	public static Comparator<InstanceResult> bestDwsValueComparatorDesc = new Comparator<InstanceResult>() {
+
+		public int compare(InstanceResult irs1, InstanceResult irs2) {
+			double x = irs2.getBestDwsValue() - irs1.getBestDwsValue();
 			if(x > 0) {
 				return 1;
 			}

@@ -9,9 +9,9 @@ import br.ufrn.imd.selftraining.utils.Mathematics;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 
-public class SelfTrainingDws extends SelfTraining{
+public class SelfTrainingDwsC extends SelfTraining{
 
-	public SelfTrainingDws(Dataset testSet, Dataset validationSet) {
+	public SelfTrainingDwsC(Dataset testSet, Dataset validationSet) {
 		super(testSet, validationSet);
 	}
 
@@ -21,7 +21,7 @@ public class SelfTrainingDws extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runStandardDws() throws Exception {
+	public void runDwsC() throws Exception {
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 
 		int i = 1;
@@ -30,7 +30,7 @@ public class SelfTrainingDws extends SelfTraining{
 			addIterationInfoToHistory();
 
 			trainMainCLassifierOverLabeledSet();
-			classifyInstancesStandardDws(this.unlabeledSet);
+			classifyInstancesDwsC(this.unlabeledSet);
 
 			if (tempSet.getInstances().size() == 0) {
 				break;
@@ -55,7 +55,7 @@ public class SelfTrainingDws extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runStandardDwsNewSelection() throws Exception {
+	public void runDwscNewSelection() throws Exception {
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 
 		int i = 1;
@@ -64,7 +64,7 @@ public class SelfTrainingDws extends SelfTraining{
 			addIterationInfoToHistory();
 
 			trainMainCLassifierOverLabeledSet();
-			classifyInstancesStandardDwsNewSelection(this.unlabeledSet);
+			classifyInstancesDwscNewSelection(this.unlabeledSet);
 
 			if (tempSet.getInstances().size() == 0) {
 				break;
@@ -88,7 +88,7 @@ public class SelfTrainingDws extends SelfTraining{
 	 * 
 	 * @throws Exception
 	 */
-	public void runStandardDwsNewSelectionLabelling() throws Exception {
+	public void runDwscNewSelectionLabelling() throws Exception {
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 
 		int i = 1;
@@ -97,7 +97,7 @@ public class SelfTrainingDws extends SelfTraining{
 			addIterationInfoToHistory();
 
 			trainMainCLassifierOverLabeledSet();
-			classifyInstancesStandardDwsNewSelectionLabelling(this.unlabeledSet);
+			classifyInstancesDwscNewSelectionLabelling(this.unlabeledSet);
 
 			if (tempSet.getInstances().size() == 0) {
 				break;
@@ -113,7 +113,7 @@ public class SelfTrainingDws extends SelfTraining{
 		mainClassifierJob();
 	}
 
-	public void runStandardDwsNewLabelling() throws Exception {
+	public void runDwscNewLabelling() throws Exception {
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 
 		int i = 1;
@@ -122,7 +122,7 @@ public class SelfTrainingDws extends SelfTraining{
 			addIterationInfoToHistory();
 
 			trainMainCLassifierOverLabeledSet();
-			classifyInstancesStandardDwsNewLabelling(this.unlabeledSet);
+			classifyInstancesDwscNewLabelling(this.unlabeledSet);
 
 			if (tempSet.getInstances().size() == 0) {
 				break;
@@ -138,7 +138,7 @@ public class SelfTrainingDws extends SelfTraining{
 		mainClassifierJob();
 	}
 	
-	protected void classifyInstancesStandardDws(Dataset dataset) throws Exception {
+	protected void classifyInstancesDwsC(Dataset dataset) throws Exception {
 
 		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		Instance[] centroids = Mathematics.centroidsOf(this.labeledSet.getInstances());
@@ -185,7 +185,7 @@ public class SelfTrainingDws extends SelfTraining{
 		addToHistory(sb.toString());
 	}
 	
-	protected void classifyInstancesStandardDwsNewSelection(Dataset dataset) throws Exception {
+	protected void classifyInstancesDwscNewSelection(Dataset dataset) throws Exception {
 
 		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		Instance[] centroids = Mathematics.centroidsOf(this.labeledSet.getInstances());
@@ -237,7 +237,7 @@ public class SelfTrainingDws extends SelfTraining{
 		addToHistory(sb.toString());
 	}
 	
-	protected void classifyInstancesStandardDwsNewSelectionLabelling(Dataset dataset) throws Exception {
+	protected void classifyInstancesDwscNewSelectionLabelling(Dataset dataset) throws Exception {
 
 		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		Instance[] centroids = Mathematics.centroidsOf(this.labeledSet.getInstances());
@@ -289,7 +289,7 @@ public class SelfTrainingDws extends SelfTraining{
 		addToHistory(sb.toString());
 	}
 	
-	protected void classifyInstancesStandardDwsNewLabelling(Dataset dataset) throws Exception {
+	protected void classifyInstancesDwscNewLabelling(Dataset dataset) throws Exception {
 
 		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		Instance[] centroids = Mathematics.centroidsOf(this.labeledSet.getInstances());

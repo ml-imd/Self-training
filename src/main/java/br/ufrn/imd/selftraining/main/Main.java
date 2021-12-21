@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import br.ufrn.imd.selftraining.core.Dataset;
 import br.ufrn.imd.selftraining.core.SelfTraining;
-import br.ufrn.imd.selftraining.core.SelfTrainingDws;
+import br.ufrn.imd.selftraining.core.SelfTrainingDwsA;
+import br.ufrn.imd.selftraining.core.SelfTrainingDwsC;
 import br.ufrn.imd.selftraining.core.SelfTrainingEnsembleBased;
-import br.ufrn.imd.selftraining.core.SelfTrainingEnsembleBasedTest;
 import br.ufrn.imd.selftraining.core.SelfTrainingStandard;
 import br.ufrn.imd.selftraining.filemanipulation.SelfTrainingOutputWriter;
 import br.ufrn.imd.selftraining.results.SelfTrainingResult;
@@ -24,9 +24,15 @@ public class Main {
 	public static String selfTrainingRandom = "ST_RANDOM";
 
 	public static String selfTrainingDwsc = "ST_VERSION_DWS_C";
-	public static String selfTrainingDwscNewSelection = "ST_DWS_C_NEW_SELCTION";
-	public static String selfTrainingDwscNewSelectionLabelling = "ST_DWS_C_NEW_SELCTION_LABELLING";
+	public static String selfTrainingDwscNewSelection = "ST_DWS_C_NEW_SELECTION";
+	public static String selfTrainingDwscNewSelectionLabelling = "ST_DWS_C_NEW_SELECTION_LABELLING";
 	public static String selfTrainingDwscNewLabelling = "ST_DWS_C_NEW_LABELLING";
+	
+	public static String selfTrainingDwsa = "ST_VERSION_DWS_C";
+	public static String selfTrainingDwsaNewSelection = "ST_DWS_A_NEW_SELECTION";
+	public static String selfTrainingDwsaNewSelectionLabelling = "ST_DWS_A_NEW_SELECTION_LABELLING";
+	public static String selfTrainingDwsaNewLabelling = "ST_DWS_A_NEW_LABELLING";
+	
 
 	public static String selfTrainingEbalV1 = "ST_EBAL_V_01";
 	public static String selfTrainingEbalV2 = "ST_EBAL_V_02";
@@ -47,9 +53,9 @@ public class Main {
 
 		for (Dataset d : datasets) {
 			// run(d, selfTrainingDwsc);
-			run(d, selfTrainingDwscNewSelection);
-			run(d, selfTrainingDwscNewSelectionLabelling);
-			run(d, selfTrainingDwscNewLabelling);
+			run(d, selfTrainingDwsaNewSelection);
+			run(d, selfTrainingDwsaNewSelectionLabelling);
+			run(d, selfTrainingDwsaNewLabelling);
 		}
 	}
 
@@ -79,19 +85,7 @@ public class Main {
 				}
 			}
 
-			if (selfTrainingVersion.equals(selfTrainingDwscNewSelection)) {
-				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
-				stdws.runStandardDwsNewSelection();
-				st = (SelfTraining) stdws;
-			} else if (selfTrainingVersion.equals(selfTrainingDwscNewSelectionLabelling)) {
-				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
-				stdws.runStandardDwsNewSelectionLabelling();
-				st = (SelfTraining) stdws;
-			} else if (selfTrainingVersion.equals(selfTrainingDwscNewLabelling)) {
-				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
-				stdws.runStandardDwsNewLabelling();
-				st = (SelfTraining) stdws;
-			} else if (selfTrainingVersion.equals(selfTrainingStandard)) {
+			if (selfTrainingVersion.equals(selfTrainingStandard)) {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runStandard();
 				st = (SelfTrainingStandard) sts;
@@ -100,9 +94,21 @@ public class Main {
 				sts.runRandom();
 				st = (SelfTrainingStandard) sts;
 			} else if (selfTrainingVersion.equals(selfTrainingDwsc)) {
-				SelfTrainingDws stdws = new SelfTrainingDws(Dataset.joinDatasets(foldsForTest), validation);
-				stdws.runStandardDws();
-				st = (SelfTraining) stdws;
+				SelfTrainingDwsC stdwsc = new SelfTrainingDwsC(Dataset.joinDatasets(foldsForTest), validation);
+				stdwsc.runDwsC();
+				st = (SelfTraining) stdwsc;
+			} else if (selfTrainingVersion.equals(selfTrainingDwscNewSelection)) {
+				SelfTrainingDwsC stdwsc = new SelfTrainingDwsC(Dataset.joinDatasets(foldsForTest), validation);
+				stdwsc.runDwscNewSelection();
+				st = (SelfTraining) stdwsc;
+			} else if (selfTrainingVersion.equals(selfTrainingDwscNewSelectionLabelling)) {
+				SelfTrainingDwsC stdwsc = new SelfTrainingDwsC(Dataset.joinDatasets(foldsForTest), validation);
+				stdwsc.runDwscNewSelectionLabelling();
+				st = (SelfTraining) stdwsc;
+			} else if (selfTrainingVersion.equals(selfTrainingDwscNewLabelling)) {
+				SelfTrainingDwsC stdwsc = new SelfTrainingDwsC(Dataset.joinDatasets(foldsForTest), validation);
+				stdwsc.runDwscNewLabelling();
+				st = (SelfTraining) stdwsc;
 			} else if (selfTrainingVersion.equals(selfTrainingEbalV1)) {
 				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
 						validation);
@@ -114,20 +120,25 @@ public class Main {
 				steb.runEbalVersionTwo();
 				st = (SelfTrainingEnsembleBased) steb;
 			} else if (selfTrainingVersion.equals(selfTrainingEbalV3)) {
-				SelfTrainingEnsembleBasedTest stebt = new SelfTrainingEnsembleBasedTest(
+				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(
 						Dataset.joinDatasets(foldsForTest), validation);
-				stebt.runTest();
-				st = (SelfTrainingEnsembleBasedTest) stebt;
-			} else if (selfTrainingVersion.equals(selfTrainingDwsaV1)) {
-				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
-						validation);
-				steb.runDwsaVersionOne();
+				steb.runEbalVersionThree();
 				st = (SelfTrainingEnsembleBased) steb;
-			} else if (selfTrainingVersion.equals(selfTrainingDwsaV2)) {
-				SelfTrainingEnsembleBased steb = new SelfTrainingEnsembleBased(Dataset.joinDatasets(foldsForTest),
+			} else if (selfTrainingVersion.equals(selfTrainingDwsaNewSelection)) {
+				SelfTrainingDwsA stdwsa = new SelfTrainingDwsA(Dataset.joinDatasets(foldsForTest),
 						validation);
-				steb.runDwsaVersionTwo();
-				st = (SelfTrainingEnsembleBased) steb;
+				stdwsa.runDwsaNewSelection();
+				st = (SelfTraining) stdwsa;
+			} else if (selfTrainingVersion.equals(selfTrainingDwsaNewSelectionLabelling)) {
+				SelfTrainingDwsA stdwsa = new SelfTrainingDwsA(Dataset.joinDatasets(foldsForTest),
+						validation);
+				stdwsa.runDwsaNewSelectionLabelling();
+				st = (SelfTraining) stdwsa;
+			} else if (selfTrainingVersion.equals(selfTrainingDwsaNewLabelling)) {
+				SelfTrainingDwsA stdwsa = new SelfTrainingDwsA(Dataset.joinDatasets(foldsForTest),
+						validation);
+				stdwsa.runDwsaNewLabelling();
+				st = (SelfTraining) stdwsa;
 			}
 
 			str.setEnd(System.currentTimeMillis());

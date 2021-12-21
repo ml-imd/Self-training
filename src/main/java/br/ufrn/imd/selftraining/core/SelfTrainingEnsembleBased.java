@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import br.ufrn.imd.selftraining.results.InstanceResult;
-import br.ufrn.imd.selftraining.utils.Mathematics;
+import br.ufrn.imd.selftraining.results.InstanceResultStandard;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.SMO;
@@ -84,12 +84,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 		mainClassifierJob();
 	}
 	
-	/**
-	 * TO DO
-	 * 
-	 * @throws Exception
-	 */
-	public void runDwsaVersionOne() throws Exception {
+	public void runEbalVersionThree() throws Exception {
 		
 		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
 		
@@ -100,52 +95,22 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			
 			trainMainCLassifierOverLabeledSet();
 			trainClassifiersPool();
-			classifyInstancesAndCheckAgreementDistanceFactor(this.unlabeledSet);
+			
+			classifyInstancesMainClassifier(this.unlabeledSet);
 
 			if (tempSet.getInstances().size() == 0) {
 				break;
 			}
 			
-			classifyBestWithMainClassifier();
 			joinClassifiedWithLabeledSet();
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
+			
 			clearTempSet();
 			i++;
 			printIterationInfo();
 		}
 		mainClassifierJob();
 	}
-	
-	/**
-	 * TO DO
-	 * 
-	 * @throws Exception
-	 */
-	public void runDwsaVersionTwo() throws Exception {
-		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
-		
-		int i = 1;
-		while (true) {
-			generateIterationInfo(i);
-			addIterationInfoToHistory();
-			trainMainCLassifierOverLabeledSet();
-			trainClassifiersPool();
-			classifyInstancesCheckAgreementPoolDistanceFactor(this.unlabeledSet);
-
-			if (tempSet.getInstances().size() == 0) {
-				break;
-			}
-			joinClassifiedWithLabeledSet();
-			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
-			clearTempSet();
-			i++;
-			printIterationInfo();
-			
-		}
-		mainClassifierJob();
-	}
-	
 	
 	public void trainClassifiersPool() throws Exception {
 
@@ -222,93 +187,52 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 		addToHistory(sb.toString());
 	}
 	
-	private void classifyInstancesAndCheckAgreementDistanceFactor(Dataset dataset) throws Exception {
+	private void classifyInstancesMainClassifier(Dataset dataset) throws Exception {
+
+		this.missClassifiedInstances = 0;
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
-		
-		ArrayList<InstanceResult> standardResults = new ArrayList<InstanceResult>();
-		Instance[] centroids =  Mathematics.centroidsOf(this.labeledSet.getInstances());
+		ArrayList<InstanceResultStandard> standardResults = new ArrayList<InstanceResultStandard>();
 		int amount = this.amountToJoin;
 
-		InstanceResult instanceResult;
-		
-		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
-		while(iterator.hasNext()) {
-			Instance instance = iterator.next();
-			instanceResult = new InstanceResult(instance);
-			for(Classifier c: this.pool) {
-				instanceResult.addPrediction(c.classifyInstance(instance));
-			}
-			
-			Double distance = Mathematics.euclidianDistance(instance, centroids[instanceResult.getBestClassIndex()]);
-			instanceResult.setFactor(instanceResult.getBestAgreement() * (1 / distance));
-			standardResults.add(instanceResult);
-		}
-			
-		Collections.sort(standardResults, InstanceResult.factorComparatorDesc);
-		
-		if(this.unlabeledSet.getInstances().size() < amount*2) {
-			amount = this.unlabeledSet.getInstances().size();
-		}
-		
-		for(InstanceResult ir: standardResults) {
-			sb.append(ir.outputDataToCsvWithDistanceFactor() + "\n");
-		}
-		
-		for(int i = 0; i < amount; i++) {
-			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
-			//class value come from main classifier in next step (there was here and line to get best class and put inside class of "d")
-			tempSet.addInstance(d); //CAUTION
-			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
-		}
-		
-		this.goodClassifiedInstances = tempSet.getInstances().size();
-		sb.append("\n");
-		addToHistory(sb.toString());
-	}
-	
-	private void classifyInstancesCheckAgreementPoolDistanceFactor(Dataset dataset) throws Exception {
-		
 		StringBuilder sb = new StringBuilder();
 		sb.append("UNLABELED SET ITERATION RESULT: \n\n");
 		
-		ArrayList<InstanceResult> standardResults = new ArrayList<InstanceResult>();
-		Instance[] centroids =  Mathematics.centroidsOf(this.labeledSet.getInstances());
-		int amount = this.amountToJoin;
-		
-		InstanceResult instanceResult;
+		InstanceResultStandard instanceResultStandard;
 		
 		Iterator<Instance> iterator = this.unlabeledSet.getInstances().iterator();
 		while(iterator.hasNext()) {
 			Instance instance = iterator.next();
-			instanceResult = new InstanceResult(instance);
-			for(Classifier c: this.pool) {
-				instanceResult.addPrediction(c.classifyInstance(instance));
-			}
-			
-			Double distance = Mathematics.euclidianDistance(instance, centroids[instanceResult.getBestClassIndex()]);
-			instanceResult.setFactor(instanceResult.getBestAgreement() * (1 / distance));
-			standardResults.add(instanceResult);
+			instanceResultStandard = new InstanceResultStandard(instance);
+			instanceResultStandard.addConfidences(this.mainClassifier.distributionForInstance(instance));
+			standardResults.add(instanceResultStandard);
+
+			sb.append(instanceResultStandard.outputDataToCsv() + "\n");
 		}
 		
-		Collections.sort(standardResults, InstanceResult.factorComparatorDesc);
+		Collections.sort(standardResults, InstanceResultStandard.bestConfidenceComparatorDesc);
 		
 		if(this.unlabeledSet.getInstances().size() < amount*2) {
 			amount = this.unlabeledSet.getInstances().size();
 		}
 		
-		for(InstanceResult ir: standardResults) {
-			sb.append(ir.outputDataToCsvWithDistanceFactor() + "\n");
-		}
-		
 		for(int i = 0; i < amount; i++) {
 			DenseInstance d = (DenseInstance) standardResults.get(i).getInstance().copy();
-			d.setClassValue(standardResults.get(i).getBestClass());
+			
+			InstanceResult instanceResult = new InstanceResult(d);
+			for(Classifier c: this.pool) {
+				instanceResult.addPrediction(c.classifyInstance(d));
+			}
+			
+			d.setClassValue(instanceResult.getBestClass());
 			tempSet.addInstance(d); //CAUTION
+			
+			if(standardResults.get(i).getInstance().classValue() != instanceResult.getBestClass()) {
+				this.missClassifiedInstances += 1;
+			}
+			
 			unlabeledSet.getInstances().remove(standardResults.get(i).getInstance());
 		}
-		
+
 		this.goodClassifiedInstances = tempSet.getInstances().size();
 		sb.append("\n");
 		addToHistory(sb.toString());

@@ -387,6 +387,9 @@ public class SelfTrainingDwsA extends SelfTraining{
 			}
 			
 			instanceResult.addDwsValues(dwsValues);
+			
+			instanceResult.correctValues();
+			
 			standardResults.add(instanceResult);
 		}
 		
@@ -444,7 +447,10 @@ public class SelfTrainingDwsA extends SelfTraining{
 					dwsValues.add(0.0);
 				}
 			}
-			instanceResult.addDwsValues(dwsValues);			
+			instanceResult.addDwsValues(dwsValues);	
+			
+			instanceResult.correctValues();
+			
 			standardResults.add(instanceResult);
 		}
 		

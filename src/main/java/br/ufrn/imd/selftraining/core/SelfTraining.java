@@ -12,7 +12,7 @@ public class SelfTraining {
 
 	protected Dataset labeledSet;
 	protected Dataset unlabeledSet;
-	protected int labeledSetPercentual = 10;
+	protected int labeledSetPercentual = 5;
 
 	protected int unlabeledSetJoinRate = 10;
 	protected int amountToJoin = 0;

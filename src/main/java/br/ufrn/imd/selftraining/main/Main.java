@@ -23,23 +23,17 @@ public class Main {
 	public static String selfTrainingStandard = "ST_VERSION_STANDARD";
 	public static String selfTrainingRandom = "ST_RANDOM";
 
-	public static String selfTrainingDwsc = "ST_VERSION_DWS_C";
 	public static String selfTrainingDwscNewSelection = "ST_DWS_C_NEW_SELECTION";
 	public static String selfTrainingDwscNewSelectionLabelling = "ST_DWS_C_NEW_SELECTION_LABELLING";
 	public static String selfTrainingDwscNewLabelling = "ST_DWS_C_NEW_LABELLING";
 	
-	public static String selfTrainingDwsa = "ST_VERSION_DWS_C";
 	public static String selfTrainingDwsaNewSelection = "ST_DWS_A_NEW_SELECTION";
 	public static String selfTrainingDwsaNewSelectionLabelling = "ST_DWS_A_NEW_SELECTION_LABELLING";
 	public static String selfTrainingDwsaNewLabelling = "ST_DWS_A_NEW_LABELLING";
 	
-
 	public static String selfTrainingEbalV1 = "ST_EBAL_V_01";
 	public static String selfTrainingEbalV2 = "ST_EBAL_V_02";
 	public static String selfTrainingEbalV3 = "ST_EBAL_V_03";
-
-	public static String selfTrainingDwsaV1 = "ST_DWS_A_V_01";
-	public static String selfTrainingDwsaV2 = "ST_DWS_A_V_02";
 
 	public static SelfTrainingOutputWriter sow;
 	public static String outputResultBasePath = "src/main/resources/results/";
@@ -52,7 +46,18 @@ public class Main {
 		seed = 19;
 
 		for (Dataset d : datasets) {
-			// run(d, selfTrainingDwsc);
+			
+			run(d, selfTrainingStandard);
+			run(d, selfTrainingRandom);
+			
+			run(d, selfTrainingDwscNewSelection);
+			run(d, selfTrainingDwscNewSelectionLabelling);
+			run(d, selfTrainingDwscNewLabelling);
+			
+			run(d, selfTrainingEbalV1);
+			run(d, selfTrainingEbalV2);
+			run(d, selfTrainingEbalV3);
+			
 			run(d, selfTrainingDwsaNewSelection);
 			run(d, selfTrainingDwsaNewSelectionLabelling);
 			run(d, selfTrainingDwsaNewLabelling);
@@ -93,10 +98,6 @@ public class Main {
 				SelfTrainingStandard sts = new SelfTrainingStandard(Dataset.joinDatasets(foldsForTest), validation);
 				sts.runRandom();
 				st = (SelfTrainingStandard) sts;
-			} else if (selfTrainingVersion.equals(selfTrainingDwsc)) {
-				SelfTrainingDwsC stdwsc = new SelfTrainingDwsC(Dataset.joinDatasets(foldsForTest), validation);
-				stdwsc.runDwsC();
-				st = (SelfTraining) stdwsc;
 			} else if (selfTrainingVersion.equals(selfTrainingDwscNewSelection)) {
 				SelfTrainingDwsC stdwsc = new SelfTrainingDwsC(Dataset.joinDatasets(foldsForTest), validation);
 				stdwsc.runDwscNewSelection();

@@ -33,7 +33,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 	 */
 	public void runDwsaVersionOne() throws Exception {
 		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 		
 		int i = 1;
 		while (true) {
@@ -53,7 +53,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 		}
 		mainClassifierJob();
 	}
@@ -65,7 +65,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 	 */
 	public void runDwsaVersionTwo() throws Exception {
 		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 		
 		int i = 1;
 		while (true) {
@@ -82,7 +82,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 			
 		}
 		mainClassifierJob();
@@ -99,7 +99,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 	 */
 	public void runDwsaNewSelection() throws Exception {
 		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 		
 		int i = 1;
 		while (true) {
@@ -115,7 +115,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 			
 		}
 		trainMainCLassifierOverLabeledSet();
@@ -129,7 +129,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 	 */
 	public void runDwsaNewSelectionLabelling() throws Exception {
 		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 		
 		int i = 1;
 		while (true) {
@@ -145,7 +145,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 			
 		}
 		trainMainCLassifierOverLabeledSet();
@@ -159,7 +159,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 	 */
 	public void runDwsaNewLabelling() throws Exception {
 		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 		
 		int i = 1;
 		while (true) {
@@ -175,7 +175,7 @@ public class SelfTrainingDwsA extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 			
 		}
 		trainMainCLassifierOverLabeledSet();

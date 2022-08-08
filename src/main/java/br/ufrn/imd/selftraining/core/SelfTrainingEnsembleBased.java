@@ -52,7 +52,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 		}
 		mainClassifierJob();
 	}
@@ -78,7 +78,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			result.addIterationInfo(this.goodClassifiedInstances, this.missClassifiedInstances);
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 			addIterationInfoToHistory();
 		}
 		mainClassifierJob();
@@ -86,7 +86,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 	
 	public void runEbalVersionThree() throws Exception {
 		
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 		
 		int i = 1;
 		while (true) {
@@ -107,7 +107,7 @@ public class SelfTrainingEnsembleBased extends SelfTraining{
 			
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 		}
 		mainClassifierJob();
 	}

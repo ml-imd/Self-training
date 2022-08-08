@@ -22,7 +22,7 @@ public class SelfTrainingDwsC extends SelfTraining{
 	 * @throws Exception
 	 */
 	public void runDwsC() throws Exception {
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 
 		int i = 1;
 		while (true) {
@@ -56,7 +56,7 @@ public class SelfTrainingDwsC extends SelfTraining{
 	 * @throws Exception
 	 */
 	public void runDwscNewSelection() throws Exception {
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 
 		int i = 1;
 		while (true) {
@@ -89,7 +89,7 @@ public class SelfTrainingDwsC extends SelfTraining{
 	 * @throws Exception
 	 */
 	public void runDwscNewSelectionLabelling() throws Exception {
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 
 		int i = 1;
 		while (true) {
@@ -114,7 +114,7 @@ public class SelfTrainingDwsC extends SelfTraining{
 	}
 
 	public void runDwscNewLabelling() throws Exception {
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 
 		int i = 1;
 		while (true) {

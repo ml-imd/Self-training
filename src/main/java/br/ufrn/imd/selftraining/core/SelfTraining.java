@@ -12,9 +12,9 @@ public class SelfTraining {
 
 	protected Dataset labeledSet;
 	protected Dataset unlabeledSet;
-	protected int labeledSetPercentual = 5;
+	protected int labeledSetPercentual = 10;
 
-	protected int unlabeledSetJoinRate = 10;
+	protected int unlabeledSetJoinRate = 15;
 	protected int amountToJoin = 0;
 
 	protected Dataset tempSet;
@@ -134,6 +134,12 @@ public class SelfTraining {
 		this.iterationInfo = new String(sb.toString());
 	}
 
+	protected void computeAmountToJoin() {
+		double d = this.unlabeledSetJoinRate;
+		double value = this.unlabeledSet.getInstances().size() * (d / 100.0);
+		this.amountToJoin = (int)value;
+	}
+	
 	// GETTERS AND SETTERS
 	public Dataset getValidationSet() {
 		return validationSet;

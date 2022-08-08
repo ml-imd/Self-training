@@ -23,8 +23,7 @@ public class SelfTrainingStandard extends SelfTraining {
 	 */
 	public void runStandard() throws Exception {
 
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
-
+		computeAmountToJoin();
 		int i = 1;
 		while (true) {
 			generateIterationInfo(i);
@@ -42,7 +41,7 @@ public class SelfTrainingStandard extends SelfTraining {
 
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 		}
 		mainClassifierJob();
 	}
@@ -72,7 +71,7 @@ public class SelfTrainingStandard extends SelfTraining {
 
 			clearTempSet();
 			i++;
-			printIterationInfo();
+			//printIterationInfo();
 		}
 		mainClassifierJob();
 	}
@@ -84,7 +83,7 @@ public class SelfTrainingStandard extends SelfTraining {
 	 */
 	public void runRandom() throws Exception {
 
-		this.amountToJoin = this.unlabeledSet.getInstances().size() / this.unlabeledSetJoinRate;
+		computeAmountToJoin();
 
 		int i = 1;
 		while (true) {

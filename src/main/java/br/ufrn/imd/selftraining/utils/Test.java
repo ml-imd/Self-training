@@ -1,7 +1,6 @@
 package br.ufrn.imd.selftraining.utils;
 
 import br.ufrn.imd.selftraining.core.Dataset;
-import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.filters.unsupervised.attribute.RandomSubset;
 

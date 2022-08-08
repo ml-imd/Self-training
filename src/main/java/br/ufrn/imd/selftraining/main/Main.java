@@ -54,13 +54,13 @@ public class Main {
 			run(d, selfTrainingDwscNewSelectionLabelling);
 			run(d, selfTrainingDwscNewLabelling);
 			
-			run(d, selfTrainingEbalV1);
-			run(d, selfTrainingEbalV2);
+			//run(d, selfTrainingEbalV1); //-
+			//run(d, selfTrainingEbalV2); //-
 			run(d, selfTrainingEbalV3);
 			
 			run(d, selfTrainingDwsaNewSelection);
 			run(d, selfTrainingDwsaNewSelectionLabelling);
-			run(d, selfTrainingDwsaNewLabelling);
+			//run(d, selfTrainingDwsaNewLabelling); //-
 		}
 	}
 
